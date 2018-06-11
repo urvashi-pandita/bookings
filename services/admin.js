@@ -6,32 +6,16 @@ let login = async (email, password) => {
 
 let getAllCustomers = async () => {
     return await DAO.find(['customer'], ['customer_name, customer_phone, customer_email, customer.is_verified, date as registration_date'], );
-    //     con.query(`select customer_name, customer_phone, customer_email, customer.is_verified, date as registration_date from customer`, (err, result) => {
-    //         if(err) reject(err);
-    //         else{
-    //             resolve(result)
-    //         }
-    //     })
-    // })
+
 }
 
 let getSearchCustomer = async (search) => {
     return await DAO.find(['customer'], ['*'], `customer_id like '%${search}%' or customer_name like '%${search}%' or customer_phone like '%${search}%' or customer_email like '%${search}%' or date like '%${search}%'`);
-    // con.query(`select * from customer where customer_id like '%${search}%' or customer_name like '%${search}%' or customer_phone like '%${search}%' or customer_email like '%${search}%' or date like '%${search}%'`, (err, result) => {
-    //     if(err) reject(err);
-    //     resolve(result)
-    // })
-    // })
 }
-
-
 
 let getAllBookings = async () => {
     let response = [];
     result = await DAO.find(['booking b, customer_address ca, customer c'], ['DISTINCT *'], `b.customer_address_id=ca.customer_address_id AND ca.customer_id=c.customer_id order by booking_id DESC`)
-    // con.query(`select DISTINCT * from booking b, customer_address ca, customer c where b.customer_address_id=ca.customer_address_id AND ca.customer_id=c.customer_id order by booking_id DESC`, async (err, result) => {
-    // if(err) reject(err);
-    // console.log(res);
     if (!result) {
         return 0;
     }
@@ -52,18 +36,6 @@ let getAllBookings = async () => {
                 customer_phone: result[i].customer_phone,
                 customer_email: result[i].customer_email
             }
-            // driver_details: {
-            //     driver_name: result[i].driver_name,
-            //     driver_phone: result[i].driver_phone,
-            //     driver_email: result[i].driver_email
-            // }
-            //             }
-
-            //         }
-            //         resolve(response)
-            //     })
-            // })
-
 
         }
         response.push(details)
@@ -95,11 +67,6 @@ let getSearchBooking = async (search) => {
                 customer_phone: result[i].customer_phone,
                 customer_email: result[i].customer_email
             },
-            // driver_details: {
-            //     driver_name: result[i].driver_name,
-            //     driver_phone: result[i].driver_phone,
-            //     driver_email: result[i].driver_email
-            // }
         }
 
     }
