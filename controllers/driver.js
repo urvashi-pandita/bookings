@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 async function signUp(data){
     try {
         let checkEmail = await services.driverServices.checkEmail(data.email);
+        
         if(checkEmail[0] == null){
             let register = await services.driverServices.register(data);
             return {
@@ -16,9 +17,11 @@ async function signUp(data){
                 }
             }
         }
+        
         else{
             return "Email Already Registered"
         }
+
     } catch (error) {
         return error;
     }
@@ -27,6 +30,7 @@ async function signUp(data){
 async function login(data){
     try {
         let login = await services.driverServices.login(data.email, data.password);
+        console.log("login",login)
         if(login.length != 0){
             let token = jwt.sign(login[0].driver_id, 'secretKey');
             return {
@@ -51,6 +55,7 @@ async function login(data){
 async function getBooking(req){
     try {
         let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        
         let getBooking = await services.driverServices.getBooking(verifyToken);
         let bookings = [];
         getBooking.forEach(element => {

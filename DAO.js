@@ -15,23 +15,27 @@ module.exports = {
         }
         for (i in values) {
             if (i == values.length - 1)
-                if ( values[i]=='string')
+                if (typeof values[i]=='string'){
                     projection = projection + `"${values[i]}"`;
+                    
+                }
                 else{
                     projection = projection + `${values[i]}`;
                 }
             else {
                 //projection = projection + `${values[i]} ,`;
-                if ( values[i]=='string')
+                if (typeof values[i] === "string"){
                     projection = projection + `"${values[i]}" ,`;
+                    console.log("if values", projection)
+                }
                 else{
                     projection = projection + `${values[i]} ,`;
-                };
+                    console.log("else values", projection)
+                }
             }
 
         }
         sql = `INSERT INTO ${tableName} (${crietria}) values (${projection})`;
-        // console.log(sql);
         return new Promise((resolve, reject) => {
             con.query(sql,(err,result)=>{
                 

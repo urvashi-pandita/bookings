@@ -2,14 +2,14 @@ const DAO = require ('../DAO.js');
 
 let checkEmail = async(email) => 
 {
+    console.log(email);
     return await DAO.find(['customer'],['*'],`customer_email='${email}'`); 
 }
 
 let register = async(data, otp) => {
     fields=['customer_name', 'customer_phone', 'customer_email', 'customer_password', 'OTP'];
     values=[data.name, data.phone, data.email, data.password, otp]; 
-    console.log(data);
-    return await DAO.insert( 'customer',fields,values );
+    return await DAO.insert('customer',fields,values);
 }  
 
 let login = async(email, password) => {

@@ -2,7 +2,7 @@ const mysql = require('mysql');
 global.con =  mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password:'729148@n'
+    password:'1234olchi'
 });
 let connection= async function(){ 
  try {
