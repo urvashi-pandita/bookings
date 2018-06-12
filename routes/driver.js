@@ -22,7 +22,7 @@ let driver = (server) => {
                     name: joi.string().required(),
                     phone: joi.string().required(),
                     email: joi.string().email().required(),
-                    password: joi.string().required().min(5)
+                    password: joi.string().required().min(5) 
                 }
             }
         }
@@ -51,6 +51,35 @@ let driver = (server) => {
             }
         }
     })
+
+    /**
+     *---------------------
+     *  DRIVER ADD LOCATION
+     *---------------------
+     */
+
+    server.route({
+        method: "POST",
+        path: "/driver/addLocation",
+        handler: function(req, res) {
+            return controller.driverController.addLocation(req)
+        },
+        config: {
+            description: "Add multiple locations",
+            tags: ["api", "driver"],
+            validate: {
+                payload: {
+                    detail: joi.string().optional(),
+                    latitude: joi.string().required(),
+                    longitude:  joi.string().required(),
+                },
+                headers: joi.object({
+                    'token': joi.string().required()
+                }).unknown()
+            }
+        }
+    })
+
 
     /**
      *-------------

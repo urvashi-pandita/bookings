@@ -2,6 +2,7 @@ const customer = require('./customer');
 const driver = require('./driver');
 const booking = require('./booking');
 const admin = require('./admin');
+const location=require('./driver_address');
 const address = require('./customer_address');
 const log = require("./log");
 const boom = require('boom');
@@ -15,6 +16,7 @@ let model_index = async () =>
     await address.sql_addr();
     await booking.sql_book();
     await admin.sql_admin();
+    await location.sql_loc();
     } catch (error) {
         boom.badRequest('error in creating table');
     }

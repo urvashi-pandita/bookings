@@ -51,6 +51,25 @@ async function login(data){
     }
 }
 
+async function addLocation(data) {
+    try {
+        let verifyToken = await jwt.verify(data.headers.token, 'secretKey');
+        let address = await services.driverServices.addLocation(verifyToken, data.payload);
+        
+        return {
+            statusCode: 200,
+            message: "Location Added",
+            data: {
+                details: data.payload.detail,
+                latitude: data.payload.latitude,
+                longitude: data.payload.longitude
+            }
+        }
+    } catch (error) {
+        return error;
+    }
+}
+
 
 async function getBooking(req){
     try {
@@ -98,6 +117,7 @@ async function taskDone(req){
 module.exports = {
     signUp,
     login,
+    addLocation,
     getBooking,
     taskDone
 }
