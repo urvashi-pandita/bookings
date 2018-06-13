@@ -72,7 +72,7 @@ module.exports = {
             
         return new Promise((resolve, reject) => {
             con.query(sql,(err,result)=>{
-               console.log(sql)
+              // console.log(sql)
                 if (err) {console.log(err);}
                 // console.log("result",result);
                 

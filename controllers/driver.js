@@ -23,7 +23,7 @@ async function signUp(data){
         }
 
     } catch (error) {
-        return boom.unauthorized('invalid token');
+        return error;
     }
 }
 
