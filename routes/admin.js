@@ -34,7 +34,7 @@ let admin = (server) => {
     */
     server.route({
         method: "GET",
-        path: "/admin/getAllCustomer",
+        path: "/admin/AllCustomer",
         handler: function (req, res){
             return controller.adminController.getAllCustomers(req)
         },
@@ -58,7 +58,7 @@ let admin = (server) => {
     */
     server.route({
         method: "GET",
-        path: "/admin/getAllBookings",
+        path: "/admin/AllBookings",
         handler: function (req, res){
             return controller.adminController.getAllBookings(req);
         },
@@ -82,7 +82,7 @@ let admin = (server) => {
     */
     server.route({
         method: "GET",
-        path: "/admin/getAllDrivers",
+        path: "/admin/AllDrivers",
         handler: function (req, res){
             return controller.adminController.getAllDrivers(req);
         },
@@ -106,7 +106,7 @@ let admin = (server) => {
     */
     server.route({
         method: "POST",
-        path: "/admin/assignDriver",
+        path: "/admin/AssignDriver",
         handler: function (req, res){
             return controller.adminController.assignDriver(req);
         },
@@ -156,7 +156,7 @@ let admin = (server) => {
      */
     server.route({
         method: "GET",
-        path: "/admin/getAvailDriver",
+        path: "/admin/AvailDriver",
         handler: function(req, res) {
             return controller.adminController.getAvailDriver(req);
         },

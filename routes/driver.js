@@ -51,7 +51,54 @@ let driver = (server) => {
             }
         }
     })
+ /**
+     * -------------------
+     * GET NEAREST DRIVER
+     * -------------------
+    */
 
+   server.route({
+    method: "GET",
+    path: "/driver/NearestDrivers",
+    handler: function (req, res){
+        return controller.driverController.getNearestDriver(req);
+    },
+    config: {
+        description: "Get available driver",
+        tags: ["api", "booking"],
+        validate: {
+            headers: joi.object({
+                'token': joi.string().required(),
+                'search': joi.string().optional()
+            }).unknown()
+        }
+    }
+})
+
+
+  /**
+     * ------------------------------
+     * GET NUMBER OF DRIVER BOOKINGS
+     * -----------------------------
+    */
+
+   server.route({
+    method: "GET",
+    path: "/driver/TotalBookings",
+    handler: function (req, res){
+        return controller.driverController.getDriverTotalBookings(req);
+    },
+    config: {
+        description: "Get total number of bookings of driver",
+        tags: ["api", "booking"],
+        validate: {
+            headers: joi.object({
+                'token': joi.string().required(),
+                'search': joi.string().optional()
+            }).unknown()
+        }
+    }
+})
     /**
      *---------------------
      *  DRIVER ADD LOCATION
@@ -88,7 +135,7 @@ let driver = (server) => {
      */
     server.route({
         method: "POST",
-        path: "/driver/getBookings",
+        path: "/driver/Bookings",
         handler: function(req, res){
             return controller.driverController.getBooking(req);
         },

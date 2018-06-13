@@ -51,6 +51,30 @@ async function login(data){
     }
 }
 
+async function getNearestDriver(req){
+    try {
+        let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        let getNearestDriver  =  await services.driverServices.getNearestDrivers(verifyToken);
+        return getNearestDriver;
+    }
+    catch(error){
+        return error;
+    }
+             
+}
+
+
+async function getDriverTotalBookings(req){
+    try {
+        let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        let getDriverTotalBookings  =  await services.driverServices.getDriverTotalBookings (verifyToken);
+        return getDriverTotalBookings;
+    }
+    catch(error){
+        return error;
+    }
+             
+}
 async function addLocation(data) {
     try {
         let verifyToken = await jwt.verify(data.headers.token, 'secretKey');
@@ -118,6 +142,9 @@ module.exports = {
     signUp,
     login,
     addLocation,
+    getDriverTotalBookings,
+    // getDriverTotalBookings,
+    // getNearestDriver,
     getBooking,
     taskDone
 }

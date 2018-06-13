@@ -14,6 +14,15 @@ let login = async(email, password) => {
     return await DAO.find(['driver'],['*'],`driver_email='${email}' and driver_password='${password}'`)
 }
 
+let getNearestDrivers = async (id) =>
+{
+    res1 = await DAO.find(['customer_address','driver_address'],['min(sqrt((customer_address.latitude-driver_address.latitude)*(customer_address.latitude-driver_address.latitude) + (customer_address.longitude - driver_address.longitude)*(customer_address.longitude-driver_address.longitude))) as distance, driver_id'],`1`,`driver_id order by distance ASC limit 10`); 
+    return  res1;  
+}
+
+let getDriverTotalBookings = async (id) => {
+    return await DAO.find(['booking', 'driver'],['booking.driver_id','count(*) as total_bookings'],`booking.driver_id=driver.driver_id `,` driver_id`);
+}
 let addLocation = async(id, data) => { 
     fields = ['driver_id','detailed_address', 'latitude', 'longitude'],
     values = [id, data.detail, data.latitude, data.longitude]
@@ -51,6 +60,8 @@ module.exports = {
     checkEmail,
     register,
     login,
+    getDriverTotalBookings,
+    getNearestDrivers,
     addLocation,
     getBooking,
     taskDone

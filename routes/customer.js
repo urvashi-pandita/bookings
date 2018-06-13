@@ -112,7 +112,7 @@ let customer = (server) => {
     */
     server.route({
         method: "GET",
-        path: "/customer/getAddresses",
+        path: "/customer/Addresses",
         handler: function (req, res){
             return controllers.customerController.getAllAddresses(req);
         },
