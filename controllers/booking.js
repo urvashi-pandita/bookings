@@ -91,33 +91,6 @@ async function getBooking(req){
 }
 
 
-
-// async function getNearestDriver(req){
-//     try {
-//         let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
-//         let getNearestDriver  =  await services.bookingServices.getNearestDrivers(verifyToken);
-//         return getNearestDriver;
-//     }
-//     catch(error){
-//         return error;
-//     }
-             
-// }
-
-
-// async function getDriverTotalBookings(req){
-//     try {
-//         let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
-//         let getDriverTotalBookings  =  await services.bookingServices.getDriverTotalBookings (verifyToken);
-//         return getDriverTotalBookings;
-//     }
-//     catch(error){
-//         return error;
-//     }
-             
-// }
-
-
 async function updateBooking(req){
     try {
         let verifyToken = jwt.verify(req.headers.token, 'customer_secretKey');
@@ -156,8 +129,6 @@ async function cancelBooking(req){
 module.exports = {
     insertBooking,
     getBooking,
-    // getNearestDriver,
-    // getDriverTotalBookings,
     updateBooking,
     cancelBooking
 }

@@ -36,17 +36,6 @@ let getSearchBookings = async (id, search) =>
     (b.booking_title like '%${search}%' or b.seat like '%${search}%' or b.customer_address_id like '%${search}%' or b.destination_latitude like '%${search}%' or b.destination_longitude like '%${search}%' or b.date like '%${search}%' or b.driver_id like '%${search}%' or c.customer_name like '%${search}%' or c.customer_email like '%${search}%' or c.customer_phone like '%${search}%' or cd.latitude like '%${search}%' or cd.longitude like '%${search}%')`)  
 }
 
-// let getNearestDrivers = async (id) =>
-// {
-//     res1 = await DAO.find(['customer_address','driver_address'],['min(sqrt((customer_address.latitude-driver_address.latitude)*(customer_address.latitude-driver_address.latitude) + (customer_address.longitude - driver_address.longitude)*(customer_address.longitude-driver_address.longitude))) as distance, driver_id'],`1`,`driver_id order by distance ASC limit 10`);
-    
-//     return  res1;  
-// }
- 
-// let getDriverTotalBookings = async (id) => {
-//     return await DAO.find(['booking', 'driver'],['booking.driver_id','count(*) as total_bookings'],`booking.driver_id=driver.driver_id `,` driver_id`);
-// }
-
 
 let updateBooking = async (cust_id, payload) => 
 {
@@ -86,9 +75,6 @@ let assignDriver =async (customer_address_id,driver_id)=>{
 module.exports = {
     insertBooking,
     getBooking,
-    // getNearestDrivers,
-    // getDriverTotalBookings,
-    getSearchBookings,
     updateBooking,
     cancelBooking,
     assignDriver
