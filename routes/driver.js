@@ -61,7 +61,7 @@ let driver = (server) => {
     method: "GET",
     path: "/driver/NearestDrivers",
     handler: function (req, res){
-        return controller.driverController.getNearestDriver(req);
+        return controller.driverController.getNearestDrivers(req);
     },
     config: {
         description: "Get available driver",

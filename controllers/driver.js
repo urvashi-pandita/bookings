@@ -1,6 +1,6 @@
 const services = require("../services");
 const jwt = require("jsonwebtoken");
-
+const boom =require("boom");
 async function signUp(data){
     try {
         let checkEmail = await services.driverServices.checkEmail(data.email);
@@ -23,7 +23,7 @@ async function signUp(data){
         }
 
     } catch (error) {
-        return error;
+        return boom.unauthorized('invalid token');
     }
 }
 
@@ -32,7 +32,7 @@ async function login(data){
         let login = await services.driverServices.login(data.email, data.password);
         console.log("login",login)
         if(login.length != 0){
-            let token = jwt.sign(login[0].driver_id, 'secretKey');
+            let token = jwt.sign(login[0].driver_id, 'driver_secretKey');
             return {
                 statusCode: 200,
                 message: "Successfully Logged In",
@@ -47,18 +47,18 @@ async function login(data){
             return "Email or password is wrong"
         }
     } catch (error) {
-        return error;
+        return boom.unauthorized('invalid token');;
     }
 }
 
-async function getNearestDriver(req){
+async function getNearestDrivers(req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
         let getNearestDriver  =  await services.driverServices.getNearestDrivers(verifyToken);
         return getNearestDriver;
     }
     catch(error){
-        return error;
+        return boom.unauthorized('invalid token');
     }
              
 }
@@ -66,18 +66,18 @@ async function getNearestDriver(req){
 
 async function getDriverTotalBookings(req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
         let getDriverTotalBookings  =  await services.driverServices.getDriverTotalBookings (verifyToken);
         return getDriverTotalBookings;
     }
     catch(error){
-        return error;
+        return boom.unauthorized('invalid token');
     }
              
 }
 async function addLocation(data) {
     try {
-        let verifyToken = await jwt.verify(data.headers.token, 'secretKey');
+        let verifyToken = await jwt.verify(data.headers.token, 'driver_secretKey');
         let address = await services.driverServices.addLocation(verifyToken, data.payload);
         
         return {
@@ -97,7 +97,7 @@ async function addLocation(data) {
 
 async function getBooking(req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
         
         let getBooking = await services.driverServices.getBooking(verifyToken);
         let bookings = [];
@@ -125,12 +125,12 @@ async function getBooking(req){
             date: bookings
         }
     } catch (error) {
-        return error   
+        return boom.unauthorized('invalid token'); 
     }
 }
 
 async function taskDone(req){
-    let verifyToken = await jwt.verify(req.headers.token, "secretKey");
+    let verifyToken = await jwt.verify(req.headers.token, "driver_secretKey");
     let taskDone = services.driverServices.taskDone(verifyToken, req.payload.booking_id);
     return {
         statusCode: 200,
@@ -143,8 +143,7 @@ module.exports = {
     login,
     addLocation,
     getDriverTotalBookings,
-    // getDriverTotalBookings,
-    // getNearestDriver,
+    getNearestDrivers,
     getBooking,
     taskDone
 }

@@ -4,7 +4,7 @@ const boom = require("boom");
 
 async function insertBooking(req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
         let insert = await services.bookingServices.insertBooking(verifyToken, req.payload);
  
         
@@ -28,13 +28,13 @@ async function insertBooking(req){
         }
         
     } catch (error) {
-        return error;
+        return boom.unauthorized('invalid token');
     }
 }
 
 async function getBooking(req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
         if(req.headers.search){
             let getSearchBookings = await services.bookingServices.getSearchBookings(verifyToken, req.headers.search);
             if(getSearchBookings.length != 0){
@@ -86,7 +86,7 @@ async function getBooking(req){
             return bookings;
         }
     } catch (error) {
-        return error;        
+        return boom.unauthorized('invalid token');       
     }
 }
 
@@ -120,7 +120,7 @@ async function getBooking(req){
 
 async function updateBooking(req){
     try {
-        let verifyToken = jwt.verify(req.headers.token, 'secretKey');
+        let verifyToken = jwt.verify(req.headers.token, 'customer_secretKey');
         let updateBook = await services.bookingServices.updateBooking(verifyToken, req.payload);
         return {
             statusCode: 200,
@@ -134,13 +134,13 @@ async function updateBooking(req){
             }
         }
     } catch (error) {
-        return error
+        return boom.unauthorized('invalid token');
     }
 }
 
 async function cancelBooking(req){
     try{
-        let verifyToken = jwt.verify(req.headers.token, 'secretKey');
+        let verifyToken = jwt.verify(req.headers.token, 'customer_secretKey');
         let cancelBooking = await services.bookingServices.cancelBooking(verifyToken, req.payload.booking_id);
         return {
             statusCode: 200,
@@ -148,7 +148,7 @@ async function cancelBooking(req){
          
         }
     }catch(error){
-        return error
+        return boom.unauthorized('invalid token');
     }
 }
 

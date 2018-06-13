@@ -27,7 +27,7 @@ async function signUp(data){
             return boom.conflict("Email is already registered");
         }
     } catch (error) {
-        return error;
+        return boom.unauthorized('invalid token');
     }
 }
 
@@ -35,7 +35,7 @@ async function login(data){
     try {
         let login = await services.customerServices.login(data.email, data.password);
         if(login.length != 0){
-            let token = jwt.sign(login[0].customer_id, 'secretKey');
+            let token = jwt.sign(login[0].customer_id, 'customer_secretKey');
             return {
                 statusCode: 200,
                 message: "Successfully Logged In",
@@ -51,7 +51,7 @@ async function login(data){
             return boom.conflict("Wrong Email or Password");
         }
     } catch (error) {
-        return error;
+        return boom.unauthorized('invalid token');
     }
 }
 
@@ -70,13 +70,13 @@ async function verifyOtp(req) {
             return boom.conflict("Wrong OTP");
         }
     } catch (error) {
-        return error
+        return boom.unauthorized('invalid token');
     }
 }
 
 async function addAddress(data) {
     try {
-        let verifyToken = await jwt.verify(data.headers.token, 'secretKey');
+        let verifyToken = await jwt.verify(data.headers.token, 'customer_secretKey');
         let address = await services.customerServices.addAddress(verifyToken, data.payload);
         return {
             statusCode: 200,
@@ -88,14 +88,14 @@ async function addAddress(data) {
             }
         }
     } catch (error) {
-        return error;
+        return boom.unauthorized('invalid token');
     }
 }
 
 
 async function getAllAddresses(req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
         let getAllAddress = await services.customerServices.getAllAddresses(verifyToken);
         return {
             statusCode: 200,
@@ -103,7 +103,7 @@ async function getAllAddresses(req){
             data: getAllAddress
         }
     } catch (error) {
-        return error;
+        return boom.unauthorized('invalid token');
     }
 }
 
