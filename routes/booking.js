@@ -58,6 +58,55 @@ let booking = (server) => {
 
 
     /**
+     * -------------------
+     * GET NEAREST DRIVER
+     * -------------------
+    */
+
+   server.route({
+    method: "GET",
+    path: "/booking/getNearestDrivers",
+    handler: function (req, res){
+        return controller.bookingController.getNearestDriver(req);
+    },
+    config: {
+        description: "Get available driver",
+        tags: ["api", "booking"],
+        validate: {
+            headers: joi.object({
+                'token': joi.string().required(),
+                'search': joi.string().optional()
+            }).unknown()
+        }
+    }
+})
+
+
+    /**
+     * ------------------------------
+     * GET NUMBER OF DRIVER BOOKINGS
+     * -----------------------------
+    */
+
+   server.route({
+    method: "GET",
+    path: "/booking/getDriverTotalBookings",
+    handler: function (req, res){
+        return controller.bookingController.getDriverTotalBookings(req);
+    },
+    config: {
+        description: "Get total number of bookings of driver",
+        tags: ["api", "booking"],
+        validate: {
+            headers: joi.object({
+                'token': joi.string().required(),
+                'search': joi.string().optional()
+            }).unknown()
+        }
+    }
+})
+
+    /**
      * --------------
      * Update BOOKING
      * --------------

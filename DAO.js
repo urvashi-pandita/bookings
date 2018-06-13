@@ -1,5 +1,3 @@
-
-
 module.exports = {
     insert:  (tableName, fields, values) => {
         //console.log('hiee');
@@ -26,11 +24,11 @@ module.exports = {
                 //projection = projection + `${values[i]} ,`;
                 if (typeof values[i] === "string"){
                     projection = projection + `"${values[i]}" ,`;
-                    console.log("if values", projection)
+                    
                 }
                 else{
                     projection = projection + `${values[i]} ,`;
-                    console.log("else values", projection)
+                    
                 }
             }
 
@@ -46,7 +44,8 @@ module.exports = {
         });
     },
 
-    find: (tableName,project,condition) =>{
+    find: (tableName,project,condition,group) =>{
+
         projection ="";
         tables = "";
         for(i in tableName){
@@ -63,16 +62,19 @@ module.exports = {
                 projection = projection + project[i] + ',';
             }    
         }
-        if(condition==null)
+        if(condition == null)
             sql = `SELECT ${projection} from ${tableName}`;
+        else if (group){
+            sql = `SELECT ${projection} from ${tableName} where ${condition} group by ${group}`;
+        }
         else
-            sql = `SELECT ${projection} from ${tableName} where ${condition}`;    
-        // console.log(sql);
+            sql = `SELECT ${projection} from ${tableName} where ${condition}`;
+            
         return new Promise((resolve, reject) => {
             con.query(sql,(err,result)=>{
-                
+               console.log(sql)
                 if (err) {console.log(err);}
-                // console.log(result);
+                // console.log("result",result);
                 
                 resolve(result);
             });
@@ -92,13 +94,11 @@ module.exports = {
             sql = `UPDATE ${tableName} set ${set_values}`;
         else
             sql = `UPDATE ${tableName} set ${set_values} where ${condition}`;
-        console.log(sql);
         
         return new Promise((resolve, reject) => {
             con.query(sql,(err,result)=>{
-                
+                console.log(sql);
                 if (err) {console.log(err);}
-                //console.log(result);
                 
                 resolve(result);
             });

@@ -6,6 +6,14 @@ async function insertBooking(req){
     try {
         let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
         let insert = await services.bookingServices.insertBooking(verifyToken, req.payload);
+ 
+        
+        let nearestDriverId = await services.bookingServices.getNearestDrivers(verifyToken);
+        console.log(nearestDriverId[0].driver_id);
+        
+        
+        let driverDetail = await services.bookingServices.assignDriver(req.payload.source_id,nearestDriverId[0].driver_id);
+         
         return {
             statusCode: 200,
             message: "Booking Inserted",
@@ -14,7 +22,8 @@ async function insertBooking(req){
                 source_latitude: insert[0].latitude,
                 source_longitude: insert[0].longitude,
                 destination_latitude: req.payload.destination_latitude,
-                destination_longitude: req.payload.destination_longitude
+                destination_longitude: req.payload.destination_longitude,
+                driver_id: driverDetail
             }
         }
         
@@ -82,6 +91,33 @@ async function getBooking(req){
 }
 
 
+
+async function getNearestDriver(req){
+    try {
+        let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        let getNearestDriver  =  await services.bookingServices.getNearestDrivers(verifyToken);
+        return getNearestDriver;
+    }
+    catch(error){
+        return error;
+    }
+             
+}
+
+
+async function getDriverTotalBookings(req){
+    try {
+        let verifyToken = await jwt.verify(req.headers.token, 'secretKey');
+        let getDriverTotalBookings  =  await services.bookingServices.getDriverTotalBookings (verifyToken);
+        return getDriverTotalBookings;
+    }
+    catch(error){
+        return error;
+    }
+             
+}
+
+
 async function updateBooking(req){
     try {
         let verifyToken = jwt.verify(req.headers.token, 'secretKey');
@@ -120,6 +156,8 @@ async function cancelBooking(req){
 module.exports = {
     insertBooking,
     getBooking,
+    getNearestDriver,
+    getDriverTotalBookings,
     updateBooking,
     cancelBooking
 }

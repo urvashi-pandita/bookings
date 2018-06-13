@@ -87,16 +87,17 @@ let getSearchDriver = async (search) => {
 
 let assignDriver = async (data) => {
     res1 = await DAO.find(['booking'], ['driver_id'], `booking_id='${data.booking_id}'`);
-    console.log(res1);
+     
     if (!res1) {
-        return 0;
+        return "lhnmjhsdfnhlmdh";
     }
     else {
-        res2 = await DAO.update(['booking'], [` driver_id= ${data.driver_id}`], `booking_id=${data.booking_id} `)
+        res2 = await DAO.update(['booking'], [` driver_id= ${data.driver_id}`], `booking_id=${data.booking_id}`)
         if (!res2) {
             return 0;
         }
-        res3 = await DAO.find(['booking'], ['*'], ` booking_id= ${data.booking_id}`);
+        res3 = await DAO.find(['booking'], ['*'], `booking_id= ${data.booking_id}`);
+         
         if (!res3) {
             return 0;
         }
