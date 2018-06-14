@@ -62,7 +62,7 @@ module.exports = {
                 projection = projection + project[i] + ',';
             }    
         }
-        if(condition == null)
+        if(!condition)
             sql = `SELECT ${projection} from ${tableName}`;
         else if (group){
             sql = `SELECT ${projection} from ${tableName} where ${condition} group by ${group}`;
@@ -90,7 +90,7 @@ module.exports = {
                 set_values = set_values + set[i] + ',';
             }    
         }
-        if(condition==null)
+        if(!condition)
             sql = `UPDATE ${tableName} set ${set_values}`;
         else
             sql = `UPDATE ${tableName} set ${set_values} where ${condition}`;
