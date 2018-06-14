@@ -48,7 +48,7 @@ async function login(data){
             return config.WRONG_EMAIL_PASSWORD;
         }
     } catch (error) {
-        return boom.unauthorized('invalid token');;
+        return config.INVALID_TOKEN;
     }
 }
 
@@ -59,7 +59,7 @@ async function getNearestDrivers(req){
         return getNearestDriver;
     }
     catch(error){
-        return boom.unauthorized('invalid token');
+        return config.INVALID_TOKEN;
     }
              
 }
@@ -72,7 +72,7 @@ async function getDriverTotalBookings(req){
         return getDriverTotalBookings;
     }
     catch(error){
-        return boom.unauthorized('invalid token');
+        return config.INVALID_TOKEN;
     }
              
 }
@@ -126,7 +126,7 @@ async function getBooking(req){
             date: bookings
         }
     } catch (error) {
-        return boom.unauthorized('invalid token'); 
+        return config.INVALID_TOKEN;
     }
 }
 

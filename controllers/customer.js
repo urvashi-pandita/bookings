@@ -28,7 +28,7 @@ async function signUp(data){
             return config.EMAIL_REGISTERED;
         }
     } catch (error) {
-        return boom.unauthorized('invalid token');
+        return config.INVALID_TOKEN;
     }
 }
 
@@ -49,10 +49,10 @@ async function login(data){
             }
         }
         else{
-            return boom.conflict("Wrong Email or Password");
+            return config.WRONG_EMAIL_PASSWORD;
         }
     } catch (error) {
-        return boom.unauthorized('invalid token');
+        return config.INVALID_TOKEN;
     }
 }
 
@@ -68,10 +68,10 @@ async function verifyOtp(req) {
             }
         }
         else{
-            return boom.conflict("Wrong OTP");
+            return config.WRONG_OTP;
         }
     } catch (error) {
-        return boom.unauthorized('invalid token');
+        return config.INVALID_TOKEN;
     }
 }
 
@@ -89,7 +89,7 @@ async function addAddress(data) {
             }
         }
     } catch (error) {
-        return boom.unauthorized('invalid token');
+        return config.INVALID_TOKEN;
     }
 }
 
@@ -104,7 +104,7 @@ async function getAllAddresses(req){
             data: getAllAddress
         }
     } catch (error) {
-        return boom.unauthorized('invalid token');
+        return config.INVALID_TOKEN;
     }
 }
 
