@@ -1,4 +1,5 @@
 const services = require("../services");
+const config = require('../config');
 const jwt = require("jsonwebtoken");
 const boom = require("boom");
 
@@ -59,7 +60,7 @@ async function getBooking(req){
                 return bookings;
             }
             else{
-                return "No booking Found"
+                return config.NO_BOOKING;
             }
         }
         else{

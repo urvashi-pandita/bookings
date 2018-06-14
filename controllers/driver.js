@@ -1,4 +1,5 @@
 const services = require("../services");
+const config = require('../config');
 const jwt = require("jsonwebtoken");
 const boom =require("boom");
 async function signUp(data){
@@ -19,11 +20,11 @@ async function signUp(data){
         }
         
         else{
-            return "Email Already Registered"
+            return config.EMAIL_REGISTERED;
         }
 
     } catch (error) {
-        return error;
+        return config.ACCOUNT_REGISTER;
     }
 }
 
@@ -44,7 +45,7 @@ async function login(data){
             }
         }
         else{
-            return "Email or password is wrong"
+            return config.WRONG_EMAIL_PASSWORD;
         }
     } catch (error) {
         return boom.unauthorized('invalid token');;
@@ -90,7 +91,7 @@ async function addLocation(data) {
             }
         }
     } catch (error) {
-        return error;
+        return config.ADD_LOCATION;
     }
 }
 

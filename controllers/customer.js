@@ -1,4 +1,5 @@
 const services = require("../services");
+const config= require('../config');
 const jwt = require("jsonwebtoken");
 const boom = require("boom");
 
@@ -24,7 +25,7 @@ async function signUp(data){
             }
         }
         else{
-            return boom.conflict("Email is already registered");
+            return config.EMAIL_REGISTERED;
         }
     } catch (error) {
         return boom.unauthorized('invalid token');
