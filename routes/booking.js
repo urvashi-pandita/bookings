@@ -40,7 +40,7 @@ let booking = (server) => {
     */
     server.route({
         method: "GET",
-        path: "/booking/Booking",
+        path: "/booking",
         handler: function (req, res){
             return controller.bookingController.getBooking(req);
         },
