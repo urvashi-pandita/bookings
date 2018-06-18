@@ -14,11 +14,15 @@ let login = async(email, password) => {
     return await DAO.find(['driver'],['*'],`driver_email='${email}' and driver_password='${password}'`)
 }
 
-let getNearestDrivers = async (id) =>
+let getNearestDrivers = async (driver_id, address_id) =>
 {
-    res1 = await DAO.find(['customer_address','driver_address', `driver` ],['min(sqrt((customer_address.latitude-driver_address.latitude)*(customer_address.latitude-driver_address.latitude) + (customer_address.longitude - driver_address.longitude)*(customer_address.longitude-driver_address.longitude))) as distance, driver.driver_id, driver_name, driver_phone, driver_email' ],`1`,`driver_id order by distance ASC limit 10`); 
+    res = await DAO.find(['customer_address'],['latitude','longitude'],`customer_address_id=${address_id.source_id}`);
+    
+     res1 = await DAO.find([`driver_address INNER JOIN driver on driver_address.driver_id=driver.driver_id`],[' driver.driver_id', `sqrt(((${res[0].latitude}-driver_address.latitude)*(${res[0].latitude}-driver_address.latitude)) + ((${res[0].longitude} - driver_address.longitude)*(${res[0].longitude}-driver_address.longitude))) as dist`, `ST_Distance_Sphere(point(${res[0].latitude}, ${res[0].longitude}),point(driver_address.latitude, driver_address.longitude)) * 0.00621371192 as st_distance`],`1`, '', ` dist ASC limit 10`); 
+
     return  res1;  
 }
+// select driver.driver_id, sqrt(((customer_address,latitude-driver_address.latitude)*(customer_address.latitude-driver_address.latitude)) + ((customer_address.longitude - driver_address.longitude)*(customer_address.longitude-driver_address.longitude)) as dist from driver_address INNER JOIN driver on driver_address.driver_id=driver.driver_id order by dist ASC;
 
 let getDriverTotalBookings = async (id) => {
     return await DAO.find(['booking', 'driver'],['booking.driver_id','count(*) as total_bookings','driver_name','driver_phone','driver_email'],`booking.driver_id=driver.driver_id `,` driver_id`);
@@ -55,7 +59,7 @@ let taskDone = async(driver_id, booking_id) => {
                     let response = await collection.insertOne(log);
     return res2;
 }
-
+// SELECT  (min(sqrt(5)) as distance,ST_Distance_Sphere( point(customer_address.latitude, customer_address.longitude), point(driver_address.latitude, driver_address.longitude)) as dist, driver.driver_id, driver_name, driver_phone, driver_email from customer_address,driver_address,driver where 1 order by distance ASC limit 10;
 module.exports = {
     checkEmail,
     register,

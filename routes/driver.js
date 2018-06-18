@@ -58,7 +58,7 @@ let driver = (server) => {
     */
 
    server.route({
-    method: "GET",
+    method: "POST",
     path: "/driver/NearestDrivers",
     handler: function (req, res){
         return controller.driverController.getNearestDrivers(req);
@@ -67,6 +67,9 @@ let driver = (server) => {
         description: "Get available driver",
         tags: ["api", "booking"],
         validate: {
+            payload: {
+                source_id: joi.string().required()
+            },
             headers: joi.object({
                 'token': joi.string().required(),
                 'search': joi.string().optional()

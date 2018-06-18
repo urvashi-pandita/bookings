@@ -44,8 +44,7 @@ module.exports = {
         });
     },
 
-    find: (tableName,project,condition,group) =>{
-
+    find: (tableName,project,condition,group,order) =>{
         projection ="";
         tables = "";
         for(i in tableName){
@@ -66,7 +65,10 @@ module.exports = {
             sql = `SELECT ${projection} from ${tableName}`;
         else if (group){
             sql = `SELECT ${projection} from ${tableName} where ${condition} group by ${group}`;
-        }
+            if(order){
+                sql = `SELECT ${projection} from ${tableName} where ${condition} order by ${order}`;
+            }
+        }   
         else
             sql = `SELECT ${projection} from ${tableName} where ${condition}`;
             

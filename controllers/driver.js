@@ -55,7 +55,7 @@ async function login(data){
 async function getNearestDrivers(req){
     try {
         let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
-        let getNearestDriver  =  await services.driverServices.getNearestDrivers(verifyToken);
+        let getNearestDriver  =  await services.driverServices.getNearestDrivers(verifyToken, req.payload);
         return getNearestDriver;
     }
     catch(error){
