@@ -18,7 +18,7 @@ let getNearestDrivers = async (driver_id, address_id) =>
 {
     res = await DAO.find(['customer_address'],['latitude','longitude'],`customer_address_id=${address_id.source_id}`);
     
-     res1 = await DAO.find([`driver_address INNER JOIN driver on driver_address.driver_id=driver.driver_id`],[' driver.driver_id', `sqrt(((${res[0].latitude}-driver_address.latitude)*(${res[0].latitude}-driver_address.latitude)) + ((${res[0].longitude} - driver_address.longitude)*(${res[0].longitude}-driver_address.longitude))) as dist`, `ST_Distance_Sphere(point(${res[0].latitude}, ${res[0].longitude}),point(driver_address.latitude, driver_address.longitude)) * 0.00621371192 as st_distance`],`1`, '', ` dist ASC limit 10`); 
+     res1 = await DAO.find([`driver_address INNER JOIN driver on driver_address.driver_id=driver.driver_id`],[' driver.driver_id', 'driver.driver_name', 'driver.driver_email', `sqrt(((${res[0].latitude}-driver_address.latitude)*(${res[0].latitude}-driver_address.latitude)) + ((${res[0].longitude} - driver_address.longitude)*(${res[0].longitude}-driver_address.longitude))) as dist`, `ST_Distance_Sphere(point(${res[0].latitude}, ${res[0].longitude}),point(driver_address.latitude, driver_address.longitude)) * 0.00621371192 as st_distance`],`1`, '', ` dist ASC limit 10`); 
 
     return  res1;  
 }
