@@ -1,7 +1,5 @@
 module.exports = {
-    insert:  (tableName, fields, values) => {
-        //console.log('hiee');
-        
+    insert:  (tableName, fields, values) => {  
         let crietria = "";
         let projection = "";
         for (i in fields) {
@@ -21,17 +19,14 @@ module.exports = {
                     projection = projection + `${values[i]}`;
                 }
             else {
-                //projection = projection + `${values[i]} ,`;
                 if (typeof values[i] === "string"){
                     projection = projection + `"${values[i]}" ,`;
                     
                 }
                 else{
                     projection = projection + `${values[i]} ,`;
-                    
                 }
             }
-
         }
         sql = `INSERT INTO ${tableName} (${crietria}) values (${projection})`;
         return new Promise((resolve, reject) => {
@@ -66,7 +61,7 @@ module.exports = {
         else if (group){
             sql = `SELECT ${projection} from ${tableName} where ${condition} group by ${group}`;
             if(order){
-                sql = `SELECT ${projection} from ${tableName} where ${condition} order by ${order}`;
+                sql = `SELECT ${projection} from ${tableName} where ${condition} group by ${group} order by ${order}`;
             }
         }   
         else
@@ -99,7 +94,7 @@ module.exports = {
         
         return new Promise((resolve, reject) => {
             con.query(sql,(err,result)=>{
-                console.log(sql);
+                //console.log(sql);
                 if (err) {console.log(err);}
                 
                 resolve(result);

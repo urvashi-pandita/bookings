@@ -22,7 +22,6 @@ let getNearestDrivers = async (driver_id, address_id) =>
 
     return  res1;  
 }
-// select driver.driver_id, sqrt(((customer_address,latitude-driver_address.latitude)*(customer_address.latitude-driver_address.latitude)) + ((customer_address.longitude - driver_address.longitude)*(customer_address.longitude-driver_address.longitude)) as dist from driver_address INNER JOIN driver on driver_address.driver_id=driver.driver_id order by dist ASC;
 
 let getDriverTotalBookings = async (id) => {
     return await DAO.find(['booking', 'driver'],['booking.driver_id','count(*) as total_bookings','driver_name','driver_phone','driver_email'],`booking.driver_id=driver.driver_id `,` driver_id`);
@@ -59,7 +58,7 @@ let taskDone = async(driver_id, booking_id) => {
                     let response = await collection.insertOne(log);
     return res2;
 }
-// SELECT  (min(sqrt(5)) as distance,ST_Distance_Sphere( point(customer_address.latitude, customer_address.longitude), point(driver_address.latitude, driver_address.longitude)) as dist, driver.driver_id, driver_name, driver_phone, driver_email from customer_address,driver_address,driver where 1 order by distance ASC limit 10;
+
 module.exports = {
     checkEmail,
     register,
