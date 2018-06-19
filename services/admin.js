@@ -5,7 +5,7 @@ let login = async (email, password) => {
 }
 
 let getAllCustomers = async () => {
-    return await DAO.find(['customer'], ['customer_name, customer_phone, customer_email, customer.is_verified, date as registration_date'], );
+    return await DAO.find(['customer'], ['customer_name, customer_phone, customer_email, customer.is_verified, date as registration_date'] );
 
 }
 
@@ -78,7 +78,7 @@ let getSearchBooking = async (search) => {
 
 
 let getAllDrivers = async () => {
-    return await DAO.find(['driver'], ['*'], );
+    return await DAO.find(['driver'], ['*'] );
 }
 
 let getSearchDriver = async (search) => {

@@ -4,32 +4,36 @@ const jwt = require("jsonwebtoken");
 const boom = require("boom");
 
 async function insertBooking(req){
+    
     try {
         let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
-        let insert = await services.bookingServices.insertBooking(verifyToken, req.payload);
- 
-        
-        let nearestDriverId = await services.bookingServices.getNearestDrivers(verifyToken);
-        console.log(nearestDriverId[0].driver_id);
-        
-        
-        let driverDetail = await services.bookingServices.assignDriver(req.payload.source_id,nearestDriverId[0].driver_id);
-         
-        return {
-            statusCode: 200,
-            message: "Booking Inserted",
-            data: {
-                title: req.payload.title,
-                source_latitude: insert[0].latitude,
-                source_longitude: insert[0].longitude,
-                destination_latitude: req.payload.destination_latitude,
-                destination_longitude: req.payload.destination_longitude,
-                driver_id: driverDetail
-            }
+    //  console.log(req.payload);
+     
+    let insert = await services.bookingServices.insertBooking(verifyToken, req.payload);
+
+    
+    let nearestDriverId = await services.driverServices.getNearestDrivers(verifyToken, req.payload);
+    console.log(nearestDriverId );
+    
+    
+   let driverDetail = await services.bookingServices.assignDriver(req.payload.source_id,nearestDriverId[0].driver_id);
+    
+    return {
+        statusCode: 200,
+        message: "Booking Inserted",
+        data: {
+            title: req.payload.title,
+            source_latitude: insert[0].latitude,
+            source_longitude: insert[0].longitude,
+            destination_latitude: req.payload.destination_latitude,
+            destination_longitude: req.payload.destination_longitude,
+            driver_id: driverDetail
         }
+    }
+       
         
     } catch (error) {
-        return boom.unauthorized('invalid token');
+        return boom.unauthorized('invalid2 token');
     }
 }
 

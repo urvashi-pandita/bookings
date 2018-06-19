@@ -4,11 +4,16 @@ let insertBooking = async (id, data) =>
 {
     fields=['booking_title','seat','customer_address_id','destination_latitude','destination_longitude','price','status'];
     values=[data.title, data.seat, data.source_id, data.destination_latitude, data.destination_longitude, '49', 'Booked']
-    await DAO.insert('booking',fields,values);
+     await DAO.insert('booking',fields,values);
+    
     res = await DAO.find('customer_address','*',`customer_id='${id}'`);
+    // console.log(res);
+    
     if(res != null)
     {
         r = await DAO.find(['booking','customer_address'],['booking_id'],`customer_address.customer_id='${id}' and booking.customer_address_id=customer_address.customer_address_id order by booking_id DESC limit 1`);
+        // console.log(r);
+        
         let book_id = `${r[0].booking_id}`;
         let desc = "Booking inserted";
         let date = `${new Date()}`;
@@ -20,6 +25,7 @@ let insertBooking = async (id, data) =>
         }
         const collection = dataBase.collection("log");
         let response = await collection.insertOne(log);
+        // console.log(response); 
         return res;
     }
 }
