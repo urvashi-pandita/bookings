@@ -3,22 +3,26 @@ const config = require('../config');
 const jwt = require("jsonwebtoken");
 const boom = require("boom");
 
-async function insertBooking(req){
+async function insertBooking(verifyToken, req){
     
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
-    //  console.log(req.payload);
-     
-    let insert = await services.bookingServices.insertBooking(verifyToken, req.payload);
-
-    
-    let nearestDriverId = await services.driverServices.getNearestDrivers(verifyToken, req.payload);
-    console.log(nearestDriverId );
-    
-    
-   let driverDetail = await services.bookingServices.assignDriver(req.payload.source_id,nearestDriverId[0].driver_id);
-    
-    return {
+        let insert = await services.bookingServices.insertBooking(verifyToken, req.payload);
+        console.log(insert);
+        if(!insert)
+        {
+            return boom.badRequest(config.INSERTING_VALUE_ERROR);
+        }
+        let nearestDriverId = await services.driverServices.getNearestDrivers(verifyToken, req.payload);
+        if(!nearestDriverId)
+        {
+            return 0;
+        }
+        let driverDetail = await services.bookingServices.assignDriver(req.payload.source_id,nearestDriverId[0].driver_id);
+        if(!driverDetail)
+        {
+            return 0;
+        }
+        return {
         statusCode: 200,
         message: "Booking Inserted",
         data: {
@@ -29,17 +33,15 @@ async function insertBooking(req){
             destination_longitude: req.payload.destination_longitude,
             driver_id: driverDetail
         }
-    }
-       
-        
+    }    
     } catch (error) {
-        return boom.unauthorized('invalid2 token');
+        console.log(error);
+        return boom.badRequest(config.INSERTION_ERROR);
     }
 }
 
-async function getBooking(req){
+async function getBooking(verifyToken, req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
         if(req.headers.search){
             let getSearchBookings = await services.bookingServices.getSearchBookings(verifyToken, req.headers.search);
             if(getSearchBookings.length != 0){
@@ -64,7 +66,7 @@ async function getBooking(req){
                 return bookings;
             }
             else{
-                return config.NO_BOOKING;
+                return boom.badRequest(config.NO_BOOKING);
             }
         }
         else{
@@ -91,14 +93,15 @@ async function getBooking(req){
             return bookings;
         }
     } catch (error) {
-        return boom.unauthorized('invalid token');       
+        console.log(error);
+        return boom.badRequest(config.IMPLEMENTATION_ERROR);       
     }
 }
 
 
 async function updateBooking(req){
     try {
-        let verifyToken = jwt.verify(req.headers.token, 'customer_secretKey');
+        
         let updateBook = await services.bookingServices.updateBooking(verifyToken, req.payload);
         return {
             statusCode: 200,
@@ -112,13 +115,12 @@ async function updateBooking(req){
             }
         }
     } catch (error) {
-        return boom.unauthorized('invalid token');
+        return boom.badRequest(config.UPDATION_ERROR)
     }
 }
 
 async function cancelBooking(req){
     try{
-        let verifyToken = jwt.verify(req.headers.token, 'customer_secretKey');
         let cancelBooking = await services.bookingServices.cancelBooking(verifyToken, req.payload.booking_id);
         return {
             statusCode: 200,

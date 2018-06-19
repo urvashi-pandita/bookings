@@ -1,5 +1,8 @@
 const joi = require("joi");
+const boom = require("boom");
+const jwt = require("jsonwebtoken");
 const controller = require("../controllers");
+const config = require("../config");
 
 let driver = (server) => {
 
@@ -60,8 +63,14 @@ let driver = (server) => {
    server.route({
     method: "POST",
     path: "/driver/NearestDrivers",
-    handler: function (req, res){
-        return controller.driverController.getNearestDrivers(req);
+    handler:async function (req, res){
+        try {
+            let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
+        return controller.driverController.getNearestDrivers(verifyToken, req);
+        } catch (error) {
+            return boom.badRequest(config.INVALID_TOKEN);
+        }
+        
     },
     config: {
         description: "Get available driver",
@@ -88,8 +97,13 @@ let driver = (server) => {
    server.route({
     method: "GET",
     path: "/driver/TotalBookings",
-    handler: function (req, res){
-        return controller.driverController.getDriverTotalBookings(req);
+    handler: async function (req, res){
+        try {
+            let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
+            return controller.driverController.getDriverTotalBookings(verifyToken, req);
+        } catch (error) {
+            return boom.badRequest(config.INVALID_TOKEN);
+        }   
     },
     config: {
         description: "Get total number of bookings of driver",
@@ -111,8 +125,14 @@ let driver = (server) => {
     server.route({
         method: "POST",
         path: "/driver/addLocation",
-        handler: function(req, res) {
-            return controller.driverController.addLocation(req)
+        handler: async function(req, res) {
+            try {
+                let verifyToken = await jwt.verify(data.headers.token, 'driver_secretKey');
+                return controller.driverController.addLocation(verifyToken, req)
+            } catch (error) {
+                return boom.badRequest(config.INVALID_TOKEN);
+            }
+            
         },
         config: {
             description: "Add multiple locations",
@@ -139,8 +159,14 @@ let driver = (server) => {
     server.route({
         method: "POST",
         path: "/driver/Bookings",
-        handler: function(req, res){
-            return controller.driverController.getBooking(req);
+        handler:async function(req, res){
+            try {
+                let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
+                return controller.driverController.getBooking(req);
+            } catch (error) {
+                boom.badRequest(config.INVALID_TOKEN);
+            }
+           
         },
         config: {
             description: "Driver Get Bookings API",
@@ -162,8 +188,13 @@ let driver = (server) => {
     server.route({
         method: "POST",
         path: "/driver/taskDone",
-        handler: function(req, res) {
-            return controller.driverController.taskDone(req);
+        handler:async function(req, res) {
+            try {
+                 let verifyToken = await jwt.verify(req.headers.token, "driver_secretKey");
+            return controller.driverController.taskDone(verifyToken, req);
+            } catch (error) {
+               return boom.badRequest(config.INVALID_TOKEN);
+            }   
         },
         config: {
             description: "Set Driver Free",

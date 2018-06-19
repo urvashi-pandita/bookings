@@ -1,7 +1,8 @@
 const joi = require("joi");
 const controller = require("../controllers");
-
-
+const boom = require("boom");
+const config = require("../config");
+const jwt = require("jsonwebtoken");
 let booking = (server) => {
 
     /**
@@ -12,8 +13,15 @@ let booking = (server) => {
     server.route({
         method: "POST",
         path: "/booking/insert",
-        handler: function (req, res){
-            return controller.bookingController.insertBooking(req);
+        handler: async function (req, res){
+            try {
+                let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
+                return controller.bookingController.insertBooking(verifyToken, req);
+            } catch (error) {
+               // console.log(error);
+                
+                return boom.unauthorized(config.INVALID_TOKEN);
+            } 
         },
         config: {
             description: "Insert Booking API",
@@ -41,8 +49,15 @@ let booking = (server) => {
     server.route({
         method: "GET",
         path: "/booking",
-        handler: function (req, res){
-            return controller.bookingController.getBooking(req);
+        handler:async function (req, res){
+            try {
+                let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
+                return controller.bookingController.getBooking(verifyToken, req);
+            } catch (error) {
+                // console.log(error);
+                
+                boom.unauthorized(config.INVALID_TOKEN);
+            }  
         },
         config: {
             description: "Get All Bookings",
@@ -67,7 +82,13 @@ let booking = (server) => {
         method: "POST",
         path: "/booking/update",
         handler: function (req, res){
-           return controller.bookingController.updateBooking(req);
+            try {
+                let verifyToken = jwt.verify(req.headers.token, 'customer_secretKey');
+                return controller.bookingController.updateBooking(verifyToken, req);
+            } catch (error) {
+                return boom.unauthorized(config.INVALID_TOKEN);
+            }
+           
         },
         config: {
             description: "Update Booking",
@@ -96,7 +117,12 @@ let booking = (server) => {
         method: "POST",
         path: "/booking/cancel",
         handler: function(req, res){
-            return controller.bookingController.cancelBooking(req);
+            try {
+                let verifyToken = jwt.verify(req.headers.token, 'customer_secretKey');  
+                return controller.bookingController.cancelBooking(verifyToken, req);
+            } catch (error) {
+                return boom.badRequest(config.INVALID_TOKEN);
+            }
         },
         config: {
             description: "Cancel Booking",

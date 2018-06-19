@@ -1,5 +1,8 @@
 const joi = require("joi");
 const controllers = require("../controllers");
+const jwt = require("jsonwebtoken");
+const boom = require("boom");
+const config = require("../config");
 
 let customer = (server) => {
 
@@ -61,8 +64,14 @@ let customer = (server) => {
     server.route({
         method: "post",
         path: "/customer/verifyOtp",
-        handler: function(req, res){
-            return controllers.customerController.verifyOtp(req)
+        handler: async function(req, res){
+            try {
+                let verifyToken = await jwt.verify(req.headers.token, 'signSecretKey');
+                return controllers.customerController.verifyOtp(verifyToken, req)
+            } catch (error) {
+              return boom.badRequest(config.INVALID_TOKEN);
+            }
+            
         },
         config: {
             description: "Verify account via otp API",
@@ -85,8 +94,13 @@ let customer = (server) => {
     server.route({
         method: "POST",
         path: "/customer/addAddress",
-        handler: function(req, res) {
-            return controllers.customerController.addAddress(req)
+        handler:async function(req, res) {
+            try {
+                let verifyToken = await jwt.verify(data.headers.token, 'customer_secretKey');
+                return controllers.customerController.addAddress(req);
+            } catch (error) {
+                return boom.badRequest(config.INVALID_TOKEN);
+            }    
         },
         config: {
             description: "Add multiple addresses",
@@ -113,8 +127,14 @@ let customer = (server) => {
     server.route({
         method: "GET",
         path: "/customer/Addresses",
-        handler: function (req, res){
-            return controllers.customerController.getAllAddresses(req);
+        handler:async function (req, res){
+            try {
+                let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
+                return controllers.customerController.getAllAddresses(verifyToken, req);
+            } catch (error) {
+                return boom.badRequest(config.INVALID_TOKEN);
+            }
+            
         },
         config: {
             description: "Get All Address",

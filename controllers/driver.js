@@ -54,7 +54,7 @@ async function login(data){
 
 async function getNearestDrivers(req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
+        
         let getNearestDriver  =  await services.driverServices.getNearestDrivers(verifyToken, req.payload);
         return getNearestDriver;
     }
@@ -67,7 +67,7 @@ async function getNearestDrivers(req){
 
 async function getDriverTotalBookings(req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
+        
         let getDriverTotalBookings  =  await services.driverServices.getDriverTotalBookings (verifyToken);
         return getDriverTotalBookings;
     }
@@ -78,7 +78,7 @@ async function getDriverTotalBookings(req){
 }
 async function addLocation(data) {
     try {
-        let verifyToken = await jwt.verify(data.headers.token, 'driver_secretKey');
+        
         let address = await services.driverServices.addLocation(verifyToken, data.payload);
         
         return {
@@ -98,7 +98,7 @@ async function addLocation(data) {
 
 async function getBooking(req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
+       
         
         let getBooking = await services.driverServices.getBooking(verifyToken);
         let bookings = [];
@@ -131,7 +131,7 @@ async function getBooking(req){
 }
 
 async function taskDone(req){
-    let verifyToken = await jwt.verify(req.headers.token, "driver_secretKey");
+    
     let taskDone = services.driverServices.taskDone(verifyToken, req.payload.booking_id);
     return {
         statusCode: 200,

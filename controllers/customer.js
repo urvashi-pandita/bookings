@@ -52,13 +52,13 @@ async function login(data){
             return config.WRONG_EMAIL_PASSWORD;
         }
     } catch (error) {
-        return config.INVALID_TOKEN;
+        return boom.badRequest(config.LOGIN_ERROR);
     }
 }
 
 async function verifyOtp(req) {
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'signSecretKey');
+       
         let checkOtp = await services.customerServices.checkOtp(verifyToken, req.headers.otp);
         if(checkOtp[0] != null){
             let updateAccount = await services.customerServices.updateAccount(verifyToken);
@@ -77,7 +77,7 @@ async function verifyOtp(req) {
 
 async function addAddress(data) {
     try {
-        let verifyToken = await jwt.verify(data.headers.token, 'customer_secretKey');
+        
         let address = await services.customerServices.addAddress(verifyToken, data.payload);
         return {
             statusCode: 200,
@@ -96,7 +96,7 @@ async function addAddress(data) {
 
 async function getAllAddresses(req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
+        
         let getAllAddress = await services.customerServices.getAllAddresses(verifyToken);
         return {
             statusCode: 200,

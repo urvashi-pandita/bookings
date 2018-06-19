@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 async function adminLogin(req) {
     try {
         let login = await services.adminServices.login(req.payload.email, req.payload.password);
-        if (login.length != 0) {
+        if (!login.length ) {
             let token = jwt.sign(login[0].admin_id, 'adminSecretKey');
             return {
                 statusCode: 200,
