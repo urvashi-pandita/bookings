@@ -96,9 +96,11 @@ let customer = (server) => {
         path: "/customer/addAddress",
         handler:async function(req, res) {
             try {
-                let verifyToken = await jwt.verify(data.headers.token, 'customer_secretKey');
-                return controllers.customerController.addAddress(req);
+                let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
+                return controllers.customerController.addAddress(verifyToken, req);
             } catch (error) {
+                console.log(error);
+                
                 return boom.badRequest(config.INVALID_TOKEN);
             }    
         },

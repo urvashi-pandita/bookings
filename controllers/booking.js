@@ -7,7 +7,6 @@ async function insertBooking(verifyToken, req){
     
     try {
         let insert = await services.bookingServices.insertBooking(verifyToken, req.payload);
-        console.log(insert);
         if(!insert)
         {
             return boom.badRequest(config.INSERTING_VALUE_ERROR);
@@ -62,6 +61,10 @@ async function getBooking(verifyToken, req){
                             phone: element.customer_phone
                         }
                     }
+                    if(!getSearchBookings)
+                    {
+                        return boom.badRequest(config.SEARCH_BOOKINGS_ERROR);
+                    }
                 });
                 return bookings;
             }
@@ -71,6 +74,10 @@ async function getBooking(verifyToken, req){
         }
         else{
             let getBook = await services.bookingServices.getBooking(verifyToken);
+            if(!getBook)
+            {
+                return boom.badRequest(config.BOOKING_ERROR);
+            }
             let bookings = [];
             getBook.forEach(element => {
                 let getBookings = {
@@ -88,21 +95,28 @@ async function getBooking(verifyToken, req){
                         phone: element.customer_phone
                     }
                 }
+                if(!getBookings)
+                {
+                    return boom.badRequest(config.BOOKING_ERROR);
+                }
                 bookings.push(getBookings);
             });
             return bookings;
         }
     } catch (error) {
-        console.log(error);
         return boom.badRequest(config.IMPLEMENTATION_ERROR);       
     }
 }
 
 
-async function updateBooking(req){
+async function updateBooking(verifyToken, req){
     try {
         
         let updateBook = await services.bookingServices.updateBooking(verifyToken, req.payload);
+        if(!updateBook)
+        {
+            return boom.badRequest(config.UPDATION_ERROR);
+        }
         return {
             statusCode: 200,
             message: "Booking Updated",
@@ -115,20 +129,24 @@ async function updateBooking(req){
             }
         }
     } catch (error) {
-        return boom.badRequest(config.UPDATION_ERROR)
+        return boom.badRequest(config.IMPLEMENTING_UPDATION);
     }
 }
 
-async function cancelBooking(req){
+async function cancelBooking(verifyToken, req){
     try{
         let cancelBooking = await services.bookingServices.cancelBooking(verifyToken, req.payload.booking_id);
-        return {
+        
+        if(!cancelBooking)
+        {
+            return boom.badRequest(config.CANCELLATION_ERROR);
+        } return {
             statusCode: 200,
-            message: "Booking cancled",
+            message: "Booking cancelled",
          
         }
     }catch(error){
-        return boom.unauthorized('invalid token');
+        return boom.badRequest(config.IMPLEMENTING_CANCELLATION);
     }
 }
 

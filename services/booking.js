@@ -2,8 +2,6 @@ const object_id = require("mongodb").ObjectID;
 const DAO = require('../DAO.js');
 let insertBooking = async (id, data) => 
 {
-    console.log("id-->",id);
-    console.log("data-->",data);
     fields=['booking_title','seat','customer_address_id','destination_latitude','destination_longitude','price','status'];
     values=[data.title, data.seat, data.source_id, data.destination_latitude, data.destination_longitude, '49', 'Booked']
      await DAO.insert('booking',fields,values);

@@ -6,12 +6,29 @@ const boom = require("boom");
 async function signUp(data){
     try {
         let checkEmail = await services.customerServices.checkEmail(data.email);
-        if(checkEmail[0] == null){
+        // if(checkEmail[0] == null){
+            if(!checkEmail[0]){
             let otp = Math.floor(Math.random() * 9000) + 1000;
+            if(!otp)
+            {
+                return boom.badRequest(config.OTP_ERROR);
+            }
             console.log("OTP =======> " + otp);
             let registerCustomer = await services.customerServices.register(data, otp);
+            if(!registerCustomer)
+            {
+                return boom.badRequest(config.REGISTRATION_ERROR);
+            }
             let getId = await services.customerServices.checkEmail(data.email);
+            if(!getId)
+            {
+                return boom.badRequest(config.ID_ERROR);
+            }
             let token = jwt.sign(getId[0].customer_id, 'signSecretKey');
+            if(!token)
+            {
+                return boom.badRequest(config.TOKEN_ERROR);
+            }
 
             return {
                 statusCode: 200,
@@ -20,21 +37,25 @@ async function signUp(data){
                     name: data.email,
                     phone: data.phone,
                     email: data.email,
-                    accessToken: token
+                   // accessToken: token
                 }
             }
         }
         else{
-            return config.EMAIL_REGISTERED;
+            return boom.badRequest(config.EMAIL_REGISTERED);
         }
     } catch (error) {
-        return config.INVALID_TOKEN;
+        return boom.badRequest(config.SIGNING_UP);
     }
 }
 
 async function login(data){
     try {
         let login = await services.customerServices.login(data.email, data.password);
+        if(!login)
+        {
+            return boom.badRequest(config.LOGIN_ERROR);
+        }
         if(login.length != 0){
             let token = jwt.sign(login[0].customer_id, 'customer_secretKey');
             return {
@@ -52,33 +73,41 @@ async function login(data){
             return config.WRONG_EMAIL_PASSWORD;
         }
     } catch (error) {
-        return boom.badRequest(config.LOGIN_ERROR);
+        return boom.badRequest(config.IMPLEMENTING_LOGIN);
     }
 }
 
-async function verifyOtp(req) {
+async function verifyOtp(verifyToken, req) {
     try {
        
         let checkOtp = await services.customerServices.checkOtp(verifyToken, req.headers.otp);
-        if(checkOtp[0] != null){
+        // if(checkOtp[0] != null){
+            if(checkOtp[0]){
             let updateAccount = await services.customerServices.updateAccount(verifyToken);
+            if(!updateAccount)
+            {
+                return boom.badRequest(config.UPDATING_ACCOUNT);
+            }
             return {
                 statusCode: 200,
                 message: "Account Verified"
             }
         }
         else{
-            return config.WRONG_OTP;
+            return boom.badRequest(config.WRONG_OTP);
         }
     } catch (error) {
-        return config.INVALID_TOKEN;
+        return boom.badRequest(config.VERIFYING_ACCOUNT);
     }
 }
 
-async function addAddress(data) {
+async function addAddress(verifyToken, data) {
     try {
-        
         let address = await services.customerServices.addAddress(verifyToken, data.payload);
+        if(!address)
+        {
+            return boom.badRequest(config.ADDING_ADDRESS_ERROR);
+        }
         return {
             statusCode: 200,
             message: "Address Added",
@@ -89,22 +118,26 @@ async function addAddress(data) {
             }
         }
     } catch (error) {
-        return config.INVALID_TOKEN;
+        return boom.badRequest(config.IMPLEMENTING_ADD_ADDRESS);
     }
 }
 
 
-async function getAllAddresses(req){
+async function getAllAddresses(verifyToken, req){
     try {
         
         let getAllAddress = await services.customerServices.getAllAddresses(verifyToken);
+        if(!getAllAddress)
+        {
+            return boom.badRequest(config.GETTING_ADDRESSES);
+        }
         return {
             statusCode: 200,
             message: "List of all the Addresses",
             data: getAllAddress
         }
     } catch (error) {
-        return config.INVALID_TOKEN;
+        return boom.badRequest(config.IMPLEMENTING_GET_ADDRESS);
     }
 }
 

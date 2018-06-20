@@ -65,7 +65,7 @@ let driver = (server) => {
     path: "/driver/NearestDrivers",
     handler:async function (req, res){
         try {
-            let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
+            let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
         return controller.driverController.getNearestDrivers(verifyToken, req);
         } catch (error) {
             return boom.badRequest(config.INVALID_TOKEN);
@@ -87,7 +87,37 @@ let driver = (server) => {
     }
 })
 
+/**
+     * -------------------------------------
+     * GET NEAREST DRIVER USING ST DISTANCE
+     * -------------------------------------
+    */
 
+
+   server.route({
+    method: "POST",
+    path: "/driver/NearestDriversUsingSTDistance",
+    handler:async function (req, res){
+        try {
+            let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
+            return controller.driverController.getNearestDriversUsingST(verifyToken, req);
+        } catch (error) {
+            return boom.badRequest(config.INVALID_TOKEN);
+        }    
+    },
+    config: {
+        description: "Get available driver",
+        tags: ["api", "booking"],
+        validate: {
+            payload: {
+                source_id: joi.string().required()
+            },
+            headers: joi.object({
+                'token': joi.string().required()
+            }).unknown()
+        }
+    }
+})
   /**
      * ------------------------------
      * GET NUMBER OF DRIVER BOOKINGS
