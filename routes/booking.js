@@ -40,6 +40,70 @@ let booking = (server) => {
             }
         }
     })
+     /**
+     * -------------------
+     * GET NEAREST DRIVER
+     * -------------------
+    */
+
+   server.route({
+    method: "POST",
+    path: "/booking/NearestDrivers",
+    handler:async function (req, res){
+        try {
+            let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
+        return controller.bookingController.getNearestDrivers(verifyToken, req);
+        } catch (error) {
+            return boom.badRequest(config.INVALID_TOKEN);
+        }
+        
+    },
+    config: {
+        description: "Get available driver",
+        tags: ["api", "booking"],
+        validate: {
+            payload: {
+                source_id: joi.string().required()
+            },
+            headers: joi.object({
+                'token': joi.string().required(),
+                'search': joi.string().optional()
+            }).unknown()
+        }
+    }
+})
+
+/**
+     * -------------------------------------
+     * GET NEAREST DRIVER USING ST DISTANCE
+     * -------------------------------------
+    */
+
+
+   server.route({
+    method: "POST",
+    path: "/booking/NearestDriversUsingSTDistance",
+    handler:async function (req, res){
+        try {
+            let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
+            return controller.bookingController.getNearestDriversUsingST(verifyToken, req);
+        } catch (error) {
+            return boom.badRequest(config.INVALID_TOKEN);
+        }    
+    },
+    config: {
+        description: "Get available driver",
+        tags: ["api", "booking"],
+        validate: {
+            payload: {
+                source_id: joi.string().required()
+            },
+            headers: joi.object({
+                'token': joi.string().required()
+            }).unknown()
+        }
+    }
+})
 
     /**
      * ----------------

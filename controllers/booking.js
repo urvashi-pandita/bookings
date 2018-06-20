@@ -108,6 +108,38 @@ async function getBooking(verifyToken, req){
     }
 }
 
+async function getNearestDrivers(verifyToken, req){
+    try {
+        
+        let getNearestDriver  =  await services.bookingServices.getNearestDrivers(verifyToken, req.payload);
+        if(!getNearestDriver)
+        {
+            return boom.badRequest(config.GETTING_NEAREST_DRIVER);
+        }
+        return getNearestDriver;
+    }
+    catch(error){
+        return boom.badRequest(config.IMPLEMENTING_GETTING_NEAREST_DRIVERS);
+    }
+             
+}
+
+async function getNearestDriversUsingST(verifyToken, req){
+    try {
+        
+        let getNearestDriver  =  await services.bookingServices.getNearestDriversUsingST(verifyToken, req.payload);
+        if(!getNearestDriver)
+        {
+            return boom.badRequest(config.GETTING_NEAREST_DRIVER);
+        }
+        return getNearestDriver;
+    }
+    catch(error){
+        return boom.badRequest(config.IMPLEMENTING_GETTING_NEAREST_DRIVERS);
+    }
+             
+}
+
 
 async function updateBooking(verifyToken, req){
     try {
@@ -154,6 +186,8 @@ async function cancelBooking(verifyToken, req){
 module.exports = {
     insertBooking,
     getBooking,
+    getNearestDrivers,
+    getNearestDriversUsingST,
     updateBooking,
     cancelBooking
 }

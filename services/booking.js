@@ -43,6 +43,25 @@ let getSearchBookings = async (id, search) =>
 }
 
 
+let getNearestDrivers = async (driver_id, address_id) =>
+{
+    res = await DAO.find(['customer_address'],['latitude','longitude'],`customer_address_id=${ address_id.source_id}`);
+    console.log(res);
+    
+     res1 = await DAO.find([`driver_address INNER JOIN driver on driver_address.driver_id=driver.driver_id`],[' driver.driver_id', 'driver.driver_name', 'driver.driver_email', `sqrt(((${res[0].latitude}-driver_address.latitude)*(${res[0].latitude}-driver_address.latitude)) + ((${res[0].longitude} - driver_address.longitude)*(${res[0].longitude}-driver_address.longitude))) as dist`],`1`, '', ` dist ASC limit 10`); 
+
+    return  res1;  
+}
+
+let getNearestDriversUsingST = async  (driver_id, address_id) =>
+{
+    res = await DAO.find(['customer_address'],['latitude','longitude'],`customer_address_id=${ address_id.source_id}`);
+    
+    res1 = await DAO.find([`driver_address INNER JOIN driver on driver_address.driver_id=driver.driver_id`],[' driver.driver_id', 'driver.driver_name', 'driver.driver_email', `sqrt(((${res[0].latitude}-driver_address.latitude)*(${res[0].latitude}-driver_address.latitude)) + ((${res[0].longitude} - driver_address.longitude)*(${res[0].longitude}-driver_address.longitude))) as dist`, `ST_Distance_Sphere(point(${res[0].latitude}, ${res[0].longitude}),point(driver_address.latitude, driver_address.longitude)) * 0.00621371192 as st_distance`],`1`, '', ` dist ASC limit 10`); 
+
+    return  res1;  
+}
+
 let updateBooking = async (cust_id, payload) => 
 {
     await DAO.update(['booking'],[`seat='${payload.seat}', customer_address_id='${payload.source_id}', destination_latitude='${payload.destination_latitude}', destination_longitude='${payload.destination_longitude}'`],[`booking_id='${payload.booking_id}'`])
@@ -81,6 +100,8 @@ let assignDriver =async (customer_address_id,driver_id)=>{
 module.exports = {
     insertBooking,
     getBooking,
+    getNearestDrivers,
+    getNearestDriversUsingST,
     updateBooking,
     cancelBooking,
     assignDriver

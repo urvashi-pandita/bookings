@@ -193,8 +193,6 @@ module.exports = {
     login,
     addLocation,
     getDriverTotalBookings,
-    getNearestDrivers,
-    getNearestDriversUsingST,
     getBooking,
     taskDone
 }
