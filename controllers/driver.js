@@ -37,7 +37,7 @@ async function signUp(data){
     }
 }
 
-async function login(verifyToken, data){
+async function login( data){
     try {
         let login = await services.driverServices.login(data.email, data.password);
         if(!login)
