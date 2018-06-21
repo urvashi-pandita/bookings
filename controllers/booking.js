@@ -11,7 +11,7 @@ async function insertBooking(verifyToken, req){
         {
             return boom.badRequest(config.INSERTING_VALUE_ERROR);
         }
-        let nearestDriverId = await services.driverServices.getNearestDrivers(verifyToken, req.payload);
+        let nearestDriverId = await services.bookingServices.getNearestDrivers(verifyToken, req.payload);
         if(!nearestDriverId)
         {
             return 0;

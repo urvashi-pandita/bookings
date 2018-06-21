@@ -47,8 +47,10 @@ let getNearestDrivers = async (driver_id, address_id) =>
 {
     res = await DAO.find(['customer_address'],['latitude','longitude'],`customer_address_id=${ address_id.source_id}`);
     console.log(res);
+
+    res1 = await DAO.find([`driver_address INNER JOIN driver on driver_address.driver_id=driver.driver_id`],[' driver.driver_id', 'driver.driver_name', 'driver.driver_email', `min(sqrt(((${res[0].latitude}-driver_address.latitude)*(${res[0].latitude}-driver_address.latitude)) + ((${res[0].longitude} - driver_address.longitude)*(${res[0].longitude}-driver_address.longitude)))) as dist`]); 
     
-     res1 = await DAO.find([`driver_address INNER JOIN driver on driver_address.driver_id=driver.driver_id`],[' driver.driver_id', 'driver.driver_name', 'driver.driver_email', `sqrt(((${res[0].latitude}-driver_address.latitude)*(${res[0].latitude}-driver_address.latitude)) + ((${res[0].longitude} - driver_address.longitude)*(${res[0].longitude}-driver_address.longitude))) as dist`],`1`, '', ` dist ASC limit 10`); 
+    //  select min(SQRT(((80- latitude)*(80 - latitude)) + ((80 - longitude)*(80 - longitude)))) as dist ,driver_id from driver_address;
 
     return  res1;  
 }
@@ -56,7 +58,6 @@ let getNearestDrivers = async (driver_id, address_id) =>
 let getNearestDriversUsingST = async  (driver_id, address_id) =>
 {
     res = await DAO.find(['customer_address'],['latitude','longitude'],`customer_address_id=${ address_id.source_id}`);
-    
     res1 = await DAO.find([`driver_address INNER JOIN driver on driver_address.driver_id=driver.driver_id`],[' driver.driver_id', 'driver.driver_name', 'driver.driver_email', `sqrt(((${res[0].latitude}-driver_address.latitude)*(${res[0].latitude}-driver_address.latitude)) + ((${res[0].longitude} - driver_address.longitude)*(${res[0].longitude}-driver_address.longitude))) as dist`, `ST_Distance_Sphere(point(${res[0].latitude}, ${res[0].longitude}),point(driver_address.latitude, driver_address.longitude)) * 0.00621371192 as st_distance`],`1`, '', ` dist ASC limit 10`); 
 
     return  res1;  
