@@ -54,7 +54,7 @@ let booking = (server) => {
         return controller.bookingController.getNearestDrivers(verifyToken, req);
         } catch (error) {
             console.log(error);
-            return boom.badRequest(config.INVALID_TOKEN);
+            return boom.unauthorized(config.INVALID_TOKEN);
         }
         
     },
@@ -89,7 +89,7 @@ let booking = (server) => {
             return controller.bookingController.getNearestDriversUsingST(verifyToken, req);
         } catch (error) {
             console.log(error);
-            return boom.badRequest(config.INVALID_TOKEN);
+            return boom.unauthorized(config.INVALID_TOKEN);
         }    
     },
     config: {
@@ -188,7 +188,7 @@ let booking = (server) => {
                 return controller.bookingController.cancelBooking(verifyToken, req);
             } catch (error) {
                 console.log(error);
-                return boom.badRequest(config.INVALID_TOKEN);
+                return boom.unauthorized(config.INVALID_TOKEN);
             }
         },
         config: {

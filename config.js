@@ -36,5 +36,21 @@ exports.IMPLEMENTING_DRIVER_TOTAL_BOOKINGS="error in getting total bookings of a
 exports.GETTING_BOOKING="error in getting booking";
 exports.IMPLEMENTING_GET_BOOKING="error in implementation of getting booking";
 exports.TASK_DONE_ERROR="error in removing the driver";
+exports.NO_CUSTOMER_FOUND="no customer found";
+exports.NO_CUSTOMER_PRESENT="no customer present";
+exports.ERROR_GETTING_ADDRESS="error in getting address";
+exports.NO_BOOKING_FOUND="no booking found";
+exports.GETTING_ALL_BOOKINGS="error in getting all bookings";
+exports.NO_DRIVER_FOUND="no driver found";
+exports.GETTING_ALL_DRIVERS="error in getting all drivers";
+exports.IMPLEMENTING_ASSIGNING_DRIVERS="error in implementation of assigning drivers";
+exports.NO_LOG_FOUND="no log found";
+exports.ERROR_IN_LOGS="error in logs";
+exports.ERROR_IN_GETTING_AVAILABLE_DRIVERS="error in getting available drivers";
+exports.ERROR_IN_SEARCHING_CUSTOMER="error in searching customer";
+exports.ERROR_IN_GETTING_CUSTOMER="error in getting customer";
+exports.ERROR_IN_SEARCHING_BOOKINGS="error in searching booking";
+exports.ERROR_IN_SEARCHING_DRIVERS="error in searching driver";
+
 
  

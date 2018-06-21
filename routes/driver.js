@@ -70,7 +70,7 @@ let driver = (server) => {
             return controller.driverController.getDriverTotalBookings(verifyToken, req);
         } catch (error) {
             console.log(error);
-            return boom.badRequest(config.INVALID_TOKEN);
+            return boom.unauthorized(config.INVALID_TOKEN);
         }   
     },
     config: {
@@ -99,7 +99,7 @@ let driver = (server) => {
                 return controller.driverController.addLocation(verifyToken, req)
             } catch (error) {
                 console.log(error);
-                return boom.badRequest(config.INVALID_TOKEN);
+                return boom.unauthorized(config.INVALID_TOKEN);
             }
             
         },
@@ -134,7 +134,7 @@ let driver = (server) => {
                 return controller.driverController.getBooking(req);
             } catch (error) {
                 console.log(error);
-                boom.badRequest(config.INVALID_TOKEN);
+                boom.unauthorized(config.INVALID_TOKEN);
             }
            
         },
@@ -164,7 +164,7 @@ let driver = (server) => {
             return controller.driverController.taskDone(verifyToken, req);
             } catch (error) {
                 console.log(error);
-               return boom.badRequest(config.INVALID_TOKEN);
+               return boom.unauthorized(config.INVALID_TOKEN);
             }   
         },
         config: {

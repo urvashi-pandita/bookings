@@ -1,11 +1,17 @@
 const services = require("../services");
 const jwt = require("jsonwebtoken");
+const boom = require("boom");
+const config = require("../config");
 
 async function adminLogin(req) {
     try {
         let login = await services.adminServices.login(req.payload.email, req.payload.password);
+        if(!login)
+        {
+            return boom.badRequest(config.LOGIN_ERROR);
+        }
         if (!login.length ) {
-            let token = jwt.sign(login[0].admin_id, 'adminSecretKey');
+            let token = jwt.sign({id:login[0].admin_id, date: new Date().getTime()}, 'adminSecretKey');
             return {
                 statusCode: 200,
                 message: "Successfully Logged In",
@@ -18,18 +24,22 @@ async function adminLogin(req) {
             }
         }
         else {
-            return "Wrong Email or Password";
+            return boom.badRequest(config.WRONG_EMAIL_PASSWORD);
         }
     } catch (error) {
-        return error;
+        console.log(error);
+        return boom.badRequest(config.IMPLEMENTING_LOGIN);
     }
 }
 
-async function getAllCustomers(req) {
+async function getAllCustomers(verifyToken, req) {
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'adminSecretKey');
         if (req.headers.search) {
             let getSearchCustomer = await services.adminServices.getSearchCustomer(req.headers.search);
+            if(!getSearchCustomer)
+            {
+                return boom.badRequest(config.ERROR_IN_SEARCHING_CUSTOMER);
+            }
             if(getSearchCustomer.length != 0){
                 return {
                     statusCode: 200,
@@ -38,11 +48,15 @@ async function getAllCustomers(req) {
                 }
             }
             else{
-                return "No Customer Found";
+                return boom.badRequest(config.NO_CUSTOMER_FOUND);
             }
         }
         else {
             let getCustomer = await services.adminServices.getAllCustomers();
+            if(!getCustomer)
+            {
+                boom.badRequest(config.ERROR_IN_GETTING_CUSTOMER);
+            }
             if (getCustomer.length != 0) {
                 return {
                     statusCode: 200,
@@ -51,19 +65,23 @@ async function getAllCustomers(req) {
                 }
             }
             else {
-                return "NO CUSTOMERS ARE PRESENT"
+                return boom.badRequest(config.NO_CUSTOMER_PRESENT);
             }
         }
     } catch (error) {
-        return error;
+        console.log(error);
+        return boom.badRequest(config.ERROR_GETTING_ADDRESS);
     }
 }
 
-async function getAllBookings(req) {
+async function getAllBookings(verifyToken, req) {
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'adminSecretKey');
         if (req.headers.search) {
             let getSearchBooking = await services.adminServices.getSearchBooking(req.headers.search);
+            if(!getSearchBooking)
+            {
+                return boom.badRequest(config.ERROR_IN_SEARCHING_BOOKINGS);
+            }
             if (getSearchBooking.length != 0) {
                 return {
                     statusCode: 200,
@@ -72,7 +90,7 @@ async function getAllBookings(req) {
                 }
             }
             else {
-                return "No booking found";
+                return boom.badRequest(config.NO_BOOKING_FOUND);
             }
         }
         else {
@@ -85,20 +103,25 @@ async function getAllBookings(req) {
                 }
             }
             else {
-                return "NO BOOKINGS"
+                return boom.badRequest(config.NO_BOOKING_FOUND);
             }
         }
 
     } catch (error) {
-        return error
+        console.log(error);
+        return boom.badRequest(config.GETTING_ALL_BOOKINGS);
     }
 }
 
-async function getAllDrivers(req) {
+async function getAllDrivers(verifyToken, req) {
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'adminSecretKey');
+        
         if(req.headers.search){
             let getSearchDriver = await services.adminServices.getSearchDriver(req.headers.search);
+            if(!getSearchDriver)
+            {
+                return boom.badRequest(config.ERROR_IN_SEARCHING_DRIVERS);
+            }
             return {
                 statusCode: 200,
                 message: "List of drivers you searched",
@@ -115,17 +138,17 @@ async function getAllDrivers(req) {
                 }
             }
             else {
-                return "NO DRIVERS";
+                return boom.badRequest(config.NO_DRIVER_FOUND);
             }
         }
     } catch (error) {
-        return error;
+        console.log(error);
+        return boom.badRequest(config.GETTING_ALL_DRIVERS);
     }
 }
 
-async function assignDriver(req) {
+async function assignDriver(verifyToken, req) {
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'adminSecretKey');
         let assignDriver = await services.adminServices.assignDriver(req.payload);
         return {
             statusCode: 200,
@@ -133,15 +156,16 @@ async function assignDriver(req) {
             data: assignDriver
         }
     } catch (error) {
-        return error
+        console.log(error);
+        return boom.badRequest(config.IMPLEMENTING_ASSIGNING_DRIVERS);
     }
 }
 
-async function log(req){
+async function log(verifyToken, req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, 'adminSecretKey');
+        
         if(req.headers.search){
-            let getLog = await services.adminServices.logSearch(verifyToken, req.headers.search);
+            let getLog = await services.adminServices.logSearch(verifyToken.id, req.headers.search);
             if(getLog.length != 0){
                 let logArr = [];
                 getLog.forEach(element => {
@@ -159,11 +183,11 @@ async function log(req){
                 }
             }
             else{
-                return "No Log Found"
+                return boom.badRequest(config.NO_LOG_FOUND);
             }
         }
         else{
-            let getLog = await services.adminServices.log(verifyToken);
+            let getLog = await services.adminServices.log(verifyToken.id);
             let logArr = [];
             getLog.forEach(element => {
                 let allLog = {
@@ -180,22 +204,24 @@ async function log(req){
             }
         }
     } catch (error) {
-        return error
+        console.log(error);
+        return boom.badRequest(config.ERROR_IN_LOGS);
     }
 }
 
 
-async function getAvailDriver(req){
+async function getAvailDriver(verifyToken, req){
     try {
-        let verifyToken = await jwt.verify(req.headers.token, "adminSecretKey");
-        let getAvailDriver = await services.adminServices.getAvailDriver(verifyToken);
+       
+        let getAvailDriver = await services.adminServices.getAvailDriver(verifyToken.id);
         return {
             statusCode: 200,
             message: "List of available drivers",
             data: getAvailDriver
         }
-    } catch (err) {
-        return err;
+    } catch (error) {
+        console.log(error);
+        return boom.badRequest(config.ERROR_IN_GETTING_AVAILABLE_DRIVERS);
     }
 }
 

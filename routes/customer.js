@@ -70,7 +70,7 @@ let customer = (server) => {
                 return controllers.customerController.verifyOtp(verifyToken, req)
             } catch (error) {
             console.log(error);
-            return boom.badRequest(config.INVALID_TOKEN);
+            return boom.unauthorized(config.INVALID_TOKEN);
             }
             
         },
@@ -101,7 +101,7 @@ let customer = (server) => {
                 return controllers.customerController.addAddress(verifyToken, req);
             } catch (error) {
                 console.log(error); 
-                return boom.badRequest(config.INVALID_TOKEN);
+                return boom.unauthorized(config.INVALID_TOKEN);
             }    
         },
         config: {
@@ -135,7 +135,7 @@ let customer = (server) => {
                 return controllers.customerController.getAllAddresses(verifyToken, req);
             } catch (error) {
                 console.log(error);
-                return boom.badRequest(config.INVALID_TOKEN);
+                return boom.unauthorized(config.INVALID_TOKEN);
             }
             
         },
