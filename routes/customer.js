@@ -69,7 +69,8 @@ let customer = (server) => {
                 let verifyToken = await jwt.verify(req.headers.token, 'signSecretKey');
                 return controllers.customerController.verifyOtp(verifyToken, req)
             } catch (error) {
-              return boom.badRequest(config.INVALID_TOKEN);
+            console.log(error);
+            return boom.badRequest(config.INVALID_TOKEN);
             }
             
         },
@@ -99,8 +100,7 @@ let customer = (server) => {
                 let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
                 return controllers.customerController.addAddress(verifyToken, req);
             } catch (error) {
-                console.log(error);
-                
+                console.log(error); 
                 return boom.badRequest(config.INVALID_TOKEN);
             }    
         },
@@ -134,6 +134,7 @@ let customer = (server) => {
                 let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
                 return controllers.customerController.getAllAddresses(verifyToken, req);
             } catch (error) {
+                console.log(error);
                 return boom.badRequest(config.INVALID_TOKEN);
             }
             

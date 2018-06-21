@@ -21,12 +21,12 @@ let addLocation = async(id, data) => {
     fields = ['driver_id','detailed_address', 'latitude', 'longitude'],
     values = [id, data.detail, data.latitude, data.longitude]
     res = await DAO.insert(['driver_address'],fields,values); 
-    console.log(res);
+    //console.log(res);
     return res;
 }
 
 let getBooking = async (id) => {
-    console.log(id);
+    //console.log("id----->",id);
     return await DAO.find(['booking b', 'customer_address ca', 'customer c'],['*'],`b.driver_id='${id}' AND b.customer_address_id=ca.customer_address_id AND ca.customer_id=c.customer_id`);
 }
 

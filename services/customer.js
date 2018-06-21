@@ -28,7 +28,7 @@ let addAddress = async(id, data) => {
     fields = ['customer_id','detailed_address', 'latitude', 'longitude'],
     values = [id, data.detail, data.latitude, data.longitude]
     res = await DAO.insert(['customer_address'],fields,values); 
-    console.log(res);
+    console.log("res------------->",res);
     return res;
 }
 

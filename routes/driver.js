@@ -69,6 +69,7 @@ let driver = (server) => {
             let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
             return controller.driverController.getDriverTotalBookings(verifyToken, req);
         } catch (error) {
+            console.log(error);
             return boom.badRequest(config.INVALID_TOKEN);
         }   
     },
@@ -94,9 +95,10 @@ let driver = (server) => {
         path: "/driver/addLocation",
         handler: async function(req, res) {
             try {
-                let verifyToken = await jwt.verify(data.headers.token, 'driver_secretKey');
+                let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
                 return controller.driverController.addLocation(verifyToken, req)
             } catch (error) {
+                console.log(error);
                 return boom.badRequest(config.INVALID_TOKEN);
             }
             
@@ -131,6 +133,7 @@ let driver = (server) => {
                 let verifyToken = await jwt.verify(req.headers.token, 'driver_secretKey');
                 return controller.driverController.getBooking(req);
             } catch (error) {
+                console.log(error);
                 boom.badRequest(config.INVALID_TOKEN);
             }
            
@@ -160,6 +163,7 @@ let driver = (server) => {
                  let verifyToken = await jwt.verify(req.headers.token, "driver_secretKey");
             return controller.driverController.taskDone(verifyToken, req);
             } catch (error) {
+                console.log(error);
                return boom.badRequest(config.INVALID_TOKEN);
             }   
         },

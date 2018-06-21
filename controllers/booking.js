@@ -6,12 +6,12 @@ const boom = require("boom");
 async function insertBooking(verifyToken, req){
     
     try {
-        let insert = await services.bookingServices.insertBooking(verifyToken, req.payload);
+        let insert = await services.bookingServices.insertBooking(verifyToken.id, req.payload);
         if(!insert)
         {
             return boom.badRequest(config.INSERTING_VALUE_ERROR);
         }
-        let nearestDriverId = await services.bookingServices.getNearestDrivers(verifyToken, req.payload);
+        let nearestDriverId = await services.bookingServices.getNearestDrivers(verifyToken.id, req.payload);
         if(!nearestDriverId)
         {
             return 0;
@@ -42,7 +42,7 @@ async function insertBooking(verifyToken, req){
 async function getBooking(verifyToken, req){
     try {
         if(req.headers.search){
-            let getSearchBookings = await services.bookingServices.getSearchBookings(verifyToken, req.headers.search);
+            let getSearchBookings = await services.bookingServices.getSearchBookings(verifyToken.id, req.headers.search);
             if(getSearchBookings.length != 0){
                 let bookings = [];
                 getSearchBookings.forEach(element => {
@@ -73,7 +73,7 @@ async function getBooking(verifyToken, req){
             }
         }
         else{
-            let getBook = await services.bookingServices.getBooking(verifyToken);
+            let getBook = await services.bookingServices.getBooking(verifyToken.id);
             if(!getBook)
             {
                 return boom.badRequest(config.BOOKING_ERROR);
@@ -104,6 +104,7 @@ async function getBooking(verifyToken, req){
             return bookings;
         }
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTATION_ERROR);       
     }
 }
@@ -111,7 +112,7 @@ async function getBooking(verifyToken, req){
 async function getNearestDrivers(verifyToken, req){
     try {
         
-        let getNearestDriver  =  await services.bookingServices.getNearestDrivers(verifyToken, req.payload);
+        let getNearestDriver  =  await services.bookingServices.getNearestDrivers(verifyToken.id, req.payload);
         if(!getNearestDriver)
         {
             return boom.badRequest(config.GETTING_NEAREST_DRIVER);
@@ -119,6 +120,7 @@ async function getNearestDrivers(verifyToken, req){
         return getNearestDriver;
     }
     catch(error){
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_GETTING_NEAREST_DRIVERS);
     }
              
@@ -127,7 +129,8 @@ async function getNearestDrivers(verifyToken, req){
 async function getNearestDriversUsingST(verifyToken, req){
     try {
         
-        let getNearestDriver  =  await services.bookingServices.getNearestDriversUsingST(verifyToken, req.payload);
+        let getNearestDriver  =  await services.bookingServices.getNearestDriversUsingST(verifyToken.id, req.payload);
+        console.log(getNearestDriver);
         if(!getNearestDriver)
         {
             return boom.badRequest(config.GETTING_NEAREST_DRIVER);
@@ -135,6 +138,7 @@ async function getNearestDriversUsingST(verifyToken, req){
         return getNearestDriver;
     }
     catch(error){
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_GETTING_NEAREST_DRIVERS);
     }
              
@@ -144,7 +148,7 @@ async function getNearestDriversUsingST(verifyToken, req){
 async function updateBooking(verifyToken, req){
     try {
         
-        let updateBook = await services.bookingServices.updateBooking(verifyToken, req.payload);
+        let updateBook = await services.bookingServices.updateBooking(verifyToken.id, req.payload);
         if(!updateBook)
         {
             return boom.badRequest(config.UPDATION_ERROR);
@@ -161,13 +165,14 @@ async function updateBooking(verifyToken, req){
             }
         }
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_UPDATION);
     }
 }
 
 async function cancelBooking(verifyToken, req){
     try{
-        let cancelBooking = await services.bookingServices.cancelBooking(verifyToken, req.payload.booking_id);
+        let cancelBooking = await services.bookingServices.cancelBooking(verifyToken.id, req.payload.booking_id);
         
         if(!cancelBooking)
         {
@@ -178,6 +183,7 @@ async function cancelBooking(verifyToken, req){
          
         }
     }catch(error){
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_CANCELLATION);
     }
 }

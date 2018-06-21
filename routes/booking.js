@@ -18,8 +18,7 @@ let booking = (server) => {
                 let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
                 return controller.bookingController.insertBooking(verifyToken, req);
             } catch (error) {
-               // console.log(error);
-                
+                console.log(error);
                 return boom.unauthorized(config.INVALID_TOKEN);
             } 
         },
@@ -54,6 +53,7 @@ let booking = (server) => {
             let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
         return controller.bookingController.getNearestDrivers(verifyToken, req);
         } catch (error) {
+            console.log(error);
             return boom.badRequest(config.INVALID_TOKEN);
         }
         
@@ -88,6 +88,7 @@ let booking = (server) => {
             let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
             return controller.bookingController.getNearestDriversUsingST(verifyToken, req);
         } catch (error) {
+            console.log(error);
             return boom.badRequest(config.INVALID_TOKEN);
         }    
     },
@@ -115,11 +116,10 @@ let booking = (server) => {
         path: "/booking",
         handler:async function (req, res){
             try {
-                let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey');
+                let verifyToken = await jwt.verify(req.headers.token, 'customer_secretKey'); 
                 return controller.bookingController.getBooking(verifyToken, req);
             } catch (error) {
-                // console.log(error);
-                
+                console.log(error);
                 boom.unauthorized(config.INVALID_TOKEN);
             }  
         },
@@ -148,8 +148,10 @@ let booking = (server) => {
         handler: function (req, res){
             try {
                 let verifyToken = jwt.verify(req.headers.token, 'customer_secretKey');
+                console.log(verifyToken);
                 return controller.bookingController.updateBooking(verifyToken, req);
             } catch (error) {
+                console.log(error);
                 return boom.unauthorized(config.INVALID_TOKEN);
             }
            
@@ -185,6 +187,7 @@ let booking = (server) => {
                 let verifyToken = jwt.verify(req.headers.token, 'customer_secretKey');  
                 return controller.bookingController.cancelBooking(verifyToken, req);
             } catch (error) {
+                console.log(error);
                 return boom.badRequest(config.INVALID_TOKEN);
             }
         },

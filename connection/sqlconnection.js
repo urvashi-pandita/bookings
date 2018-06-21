@@ -8,8 +8,8 @@ global.con =  mysql.createConnection({
 let connection= async function(){ 
  try {
    await con.connect(); 
-   await con.query(`create database if not exists expressdb`);
-   await con.query(`use expressdb`);
+   await con.query(`create database if not exists urvashi_booking`);
+   await con.query(`use urvashi_booking`);
    //Auto register 2 super admin
    console.log("Connected to SQL");
    

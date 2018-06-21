@@ -33,6 +33,7 @@ async function signUp(data){
         }
 
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.ACCOUNT_REGISTER);
     }
 }
@@ -64,6 +65,7 @@ async function login( data){
             return boom.badRequest(config.WRONG_EMAIL_PASSWORD);
         }
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_LOGIN);
     }
 }
@@ -71,7 +73,7 @@ async function login( data){
 async function getNearestDrivers(verifyToken, req){
     try {
         
-        let getNearestDriver  =  await services.driverServices.getNearestDrivers(verifyToken, req.payload);
+        let getNearestDriver  =  await services.driverServices.getNearestDrivers(verifyToken.id, req.payload);
         if(!getNearestDriver)
         {
             return boom.badRequest(config.GETTING_NEAREST_DRIVER);
@@ -79,6 +81,7 @@ async function getNearestDrivers(verifyToken, req){
         return getNearestDriver;
     }
     catch(error){
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_GETTING_NEAREST_DRIVERS);
     }
              
@@ -87,7 +90,7 @@ async function getNearestDrivers(verifyToken, req){
 async function getNearestDriversUsingST(verifyToken, req){
     try {
         
-        let getNearestDriver  =  await services.driverServices.getNearestDriversUsingST(verifyToken, req.payload);
+        let getNearestDriver  =  await services.driverServices.getNearestDriversUsingST(verifyToken.id, req.payload);
         if(!getNearestDriver)
         {
             return boom.badRequest(config.GETTING_NEAREST_DRIVER);
@@ -95,6 +98,7 @@ async function getNearestDriversUsingST(verifyToken, req){
         return getNearestDriver;
     }
     catch(error){
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_GETTING_NEAREST_DRIVERS);
     }
              
@@ -103,7 +107,7 @@ async function getNearestDriversUsingST(verifyToken, req){
 
 async function getDriverTotalBookings(verifyToken, req){
     try {
-        let getDriverTotalBookings  =  await services.driverServices.getDriverTotalBookings (verifyToken);
+        let getDriverTotalBookings  =  await services.driverServices.getDriverTotalBookings (verifyToken.id);
         if(!getDriverTotalBookings)
         {
             return boom.badRequest(config.DRIVERS_TOTAL_BOOKINGS)
@@ -111,6 +115,7 @@ async function getDriverTotalBookings(verifyToken, req){
         return getDriverTotalBookings;
     }
     catch(error){
+        console.log(error);
         return config.IMPLEMENTING_DRIVER_TOTAL_BOOKINGS;
     }
              
@@ -118,7 +123,7 @@ async function getDriverTotalBookings(verifyToken, req){
 async function addLocation(verifyToken, data) {
     try {
         
-        let address = await services.driverServices.addLocation(verifyToken, data.payload);
+        let address = await services.driverServices.addLocation(verifyToken.id, data.payload);
         if(!address)
         {
             return boom.badRequest(config.ADDING_ADDRESS_ERROR);
@@ -134,6 +139,7 @@ async function addLocation(verifyToken, data) {
             }
         }
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.ADD_LOCATION);
     }
 }
@@ -141,7 +147,8 @@ async function addLocation(verifyToken, data) {
 
 async function getBooking(verifyToken, req){
     try {
-        let getBooking = await services.driverServices.getBooking(verifyToken);
+        let getBooking = await services.driverServices.getBooking(verifyToken.id);
+        console.log(getBooking);
         if(!getBooking)
         {
             return boom.badRequest(config.GETTING_BOOKING);
@@ -168,16 +175,17 @@ async function getBooking(verifyToken, req){
         return {
             statusCode: 200,
             message: "List of all the bookings you are assigned to",
-            date: bookings
+            data: bookings
         }
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_GET_BOOKING);
     }
 }
 
 async function taskDone(verifyToken, req){
     
-    let taskDone = services.driverServices.taskDone(verifyToken, req.payload.booking_id);
+    let taskDone = services.driverServices.taskDone(verifyToken.id, req.payload.booking_id);
     if(!taskDone)
     {
         return boom.badRequest(config.TASK_DONE_ERROR);

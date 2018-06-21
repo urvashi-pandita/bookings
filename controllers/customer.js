@@ -45,6 +45,7 @@ async function signUp(data){
             return boom.badRequest(config.EMAIL_REGISTERED);
         }
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.SIGNING_UP);
     }
 }
@@ -73,6 +74,7 @@ async function login(data){
             return config.WRONG_EMAIL_PASSWORD;
         }
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_LOGIN);
     }
 }
@@ -83,7 +85,7 @@ async function verifyOtp(verifyToken, req) {
         let checkOtp = await services.customerServices.checkOtp(verifyToken, req.headers.otp);
         // if(checkOtp[0] != null){
             if(checkOtp[0]){
-            let updateAccount = await services.customerServices.updateAccount(verifyToken);
+            let updateAccount = await services.customerServices.updateAccount(verifyToken.id);
             if(!updateAccount)
             {
                 return boom.badRequest(config.UPDATING_ACCOUNT);
@@ -97,13 +99,18 @@ async function verifyOtp(verifyToken, req) {
             return boom.badRequest(config.WRONG_OTP);
         }
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.VERIFYING_ACCOUNT);
     }
 }
 
 async function addAddress(verifyToken, data) {
     try {
-        let address = await services.customerServices.addAddress(verifyToken, data.payload);
+        console.log(verifyToken);
+        
+        let address = await services.customerServices.addAddress(verifyToken.id, data.payload);
+        //console.log("address------>",address);
+        
         if(!address)
         {
             return boom.badRequest(config.ADDING_ADDRESS_ERROR);
@@ -118,6 +125,7 @@ async function addAddress(verifyToken, data) {
             }
         }
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_ADD_ADDRESS);
     }
 }
@@ -126,7 +134,7 @@ async function addAddress(verifyToken, data) {
 async function getAllAddresses(verifyToken, req){
     try {
         
-        let getAllAddress = await services.customerServices.getAllAddresses(verifyToken);
+        let getAllAddress = await services.customerServices.getAllAddresses(verifyToken.id);
         if(!getAllAddress)
         {
             return boom.badRequest(config.GETTING_ADDRESSES);
@@ -137,6 +145,7 @@ async function getAllAddresses(verifyToken, req){
             data: getAllAddress
         }
     } catch (error) {
+        console.log(error);
         return boom.badRequest(config.IMPLEMENTING_GET_ADDRESS);
     }
 }
