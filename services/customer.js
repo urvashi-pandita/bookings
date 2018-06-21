@@ -32,7 +32,6 @@ let addAddress = async(id, data) => {
     return res;
 }
 
-
 let getAllAddresses = async(id) => {
     return await DAO.find(['customer_address'],['*'],`customer_id='${id}'`); 
 }

@@ -57,7 +57,7 @@ async function login(data){
             return boom.badRequest(config.LOGIN_ERROR);
         }
         if(login.length != 0){
-            let token = jwt.sign(login[0].customer_id, 'customer_secretKey');
+            let token = jwt.sign({ id: login[0].customer_id, date: new Date().getTime() }, 'customer_secretKey');
             return {
                 statusCode: 200,
                 message: "Successfully Logged In",

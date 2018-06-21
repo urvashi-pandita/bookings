@@ -45,7 +45,7 @@ async function login( data){
             return boom.badRequest(config.LOGIN_ERROR);
         }
         if(login.length != 0){
-            let token = jwt.sign(login[0].driver_id, 'driver_secretKey');
+            let token = jwt.sign({id: login[0].driver_id, date: new Date().getTime()}, 'driver_secretKey');
             if(!token)
             {
                 return boom.badRequest(config.TOKEN_ERROR);
