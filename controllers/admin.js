@@ -130,6 +130,10 @@ async function getAllDrivers(verifyToken, req) {
         }
         else{
             let getDriver = await services.adminServices.getAllDrivers();
+            if(!getDriver)
+            {
+                return boom.badRequest(config.ERROR_IN_GETTING_DRIVER);
+            }
             if (getDriver.length != 0) {
                 return {
                     statusCode: 200,
@@ -150,6 +154,10 @@ async function getAllDrivers(verifyToken, req) {
 async function assignDriver(verifyToken, req) {
     try {
         let assignDriver = await services.adminServices.assignDriver(req.payload);
+        if(!assignDriver)
+        {
+            return boom.badRequest(config.ERROR_IN_ASSIGNING_DRIVER);
+        }
         return {
             statusCode: 200,
             message: "Driver Assigned",
@@ -163,9 +171,12 @@ async function assignDriver(verifyToken, req) {
 
 async function log(verifyToken, req){
     try {
-        
         if(req.headers.search){
             let getLog = await services.adminServices.logSearch(verifyToken.id, req.headers.search);
+            if(!log)
+            {
+                return boom.badRequest(config.ERROR_GETTING_LOG);
+            }
             if(getLog.length != 0){
                 let logArr = [];
                 getLog.forEach(element => {
@@ -188,6 +199,10 @@ async function log(verifyToken, req){
         }
         else{
             let getLog = await services.adminServices.log(verifyToken.id);
+            if(!getLog)
+            {
+                return boom.badRequest(config.ERROR_GETTING_LOG);
+            }
             let logArr = [];
             getLog.forEach(element => {
                 let allLog = {
@@ -214,6 +229,10 @@ async function getAvailDriver(verifyToken, req){
     try {
        
         let getAvailDriver = await services.adminServices.getAvailDriver(verifyToken.id);
+        if(!getAvailDriver)
+        {
+            return boom.badRequest(config.ERROR_IN_GET_AVAILABLE_DRIVERS);
+        }
         return {
             statusCode: 200,
             message: "List of available drivers",

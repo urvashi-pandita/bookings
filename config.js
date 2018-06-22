@@ -51,6 +51,11 @@ exports.ERROR_IN_SEARCHING_CUSTOMER="error in searching customer";
 exports.ERROR_IN_GETTING_CUSTOMER="error in getting customer";
 exports.ERROR_IN_SEARCHING_BOOKINGS="error in searching booking";
 exports.ERROR_IN_SEARCHING_DRIVERS="error in searching driver";
+exports.ERROR_IN_GETTING_DRIVER="error in getting driver";
+exports.ERROR_IN_ASSIGNING_DRIVER="error in assigning driver";
+exports.ERROR_GETTING_LOG="error in getting log";
+exports.ERROR_IN_GET_AVAILABLE_DRIVERS="error in get available drivers";
+
 
 
  
