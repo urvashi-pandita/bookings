@@ -1,4 +1,5 @@
 const mysql = require('mysql'); 
+//const bcrypt = require('bcrypt');
 global.con =  mysql.createConnection({
     host: 'localhost',
     user: 'root',
